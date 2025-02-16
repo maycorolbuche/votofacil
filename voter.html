@@ -6,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voto Fácil</title>
     <link rel="icon" href="assets/favicon.png" type="image/ng">
-
 </head>
 
 <body id="app">
-    OLA MUNDO
+    SERVER
     <a href="javascript:" onclick="app.get_data()">AAAAA</a>
 
 
@@ -19,11 +18,16 @@
     ||<span data-app="data"></span>
 
 
-    <input type="text" id="inputField" value="teste">
-    <button onclick="app.set_param('test', document.getElementById('inputField').value);">Enviar</button>
+    <form action="/send" method="post">
+        <input type="text" name="name" placeholder="Seu nome">
+        <input type="text" name="message" placeholder="Mensagem">
+        <button type="submit">Enviar</button>
+    </form>
 
-    <script src="assets/class/app.js"></script>
-    <script src="renderer.js"></script>
+
+    <h1>Receber Dados do Electron</h1>
+    <p id="mensagem">Aguardando dados do Electron...</p>
+
 </body>
 
 </html>

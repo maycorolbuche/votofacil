@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const https = require("https");
+const http = require("http");
+const fs = require("fs");
 
 let mainWindow;
 let params = {};
@@ -95,3 +97,58 @@ app.on("ready", () => {
     }
   });
 });
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  if (req.url === "/voter") {
+    const filePath = path.join(__dirname, "voter.html");
+    const readStream = fs.createReadStream(filePath);
+    readStream.pipe(res);
+  } else if (req.method === "POST" && req.url === "/send") {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+    req.on("end", () => {
+      console.log("Dados recebidos do navegador:", body);
+      res.end("Dados recebidos com sucesso!");
+    });
+  } else if (req.method === "GET" && req.url === "/get") {
+    // Envia dados para o navegador
+    res.end(JSON.stringify(params));
+  } else if (req.url === "/favicon.ico") {
+    // Ignora a requisição do favicon
+    res.end();
+    return;
+  }
+});
+let port = 3200;
+while (true) {
+  try {
+    server.listen(port);
+    break;
+  } catch (err) {
+    if (err.code === "EADDRINUSE") {
+      console.log(`Porta ${port} est  em uso, tentando outra...`);
+      port++;
+    } else {
+      throw err;
+    }
+  }
+}
+const address = server.address();
+const networkInterfaces = require("os").networkInterfaces();
+let externalAddress;
+Object.keys(networkInterfaces).forEach((interfaceName) => {
+  networkInterfaces[interfaceName].forEach((interfaceAddress) => {
+    if (interfaceAddress.family === "IPv4") {
+      externalAddress = interfaceAddress.address;
+    }
+  });
+});
+console.log(
+  `Servidor rodando na porta ${address.port} - http://${
+    externalAddress || "localhost"
+  }:${address.port}`,
+  address
+);
