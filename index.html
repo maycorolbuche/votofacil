@@ -1,16 +1,27 @@
 <!DOCTYPE html>
-<html class="notranslate" translate="no">
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google" content="notranslate">
-  <title>VotoFácil</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voto Fácil</title>
 </head>
 
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.js"></script>
+<body id="app">
+    OLA MUNDO
+    <a href="javascript:" onclick="app.get_data()">AAAAA</a>
+
+
+    <span data-app="version"></span>
+    <span data-app="server_version"></span>
+    ||<span data-app="data"></span>
+
+
+    <input type="text" id="inputField" value="teste">
+    <button onclick="app.set_param('test', document.getElementById('inputField').value);">Enviar</button>
+
+    <script src="app.js"></script>
+    <script src="renderer.js"></script>
 </body>
 
 </html>
