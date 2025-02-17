@@ -1,0 +1,24 @@
+html,
+body {
+    background: #18243D !important;
+    min-height: 100vh;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+html,
+body,
+.card-title,
+.card-body,
+.navbar-brand {
+    color: #bdd1f4;
+}
+
+.navbar {
+    background: #18243D !important;
+    color: #bdd1f4 !important;
+}
+
+.card {
+    background: #252E49;
+}
