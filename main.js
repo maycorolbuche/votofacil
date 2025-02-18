@@ -1,11 +1,15 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const https = require("https");
 const http = require("http");
 const fs = require("fs");
 
+const { serverVersion, validateParams } = require("./node/functions");
+
 let mainWindow;
 let params = {};
+const hash =
+  Math.random().toString(36).substring(2, 10) +
+  new Date().getTime().toString(36);
 
 app.on("ready", () => {
   mainWindow = new BrowserWindow({
@@ -67,67 +71,54 @@ app.on("ready", () => {
   });
 });
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/html" });
-  if (req.url === "/voter") {
-    const filePath = path.join(__dirname, "voter.html");
-    const readStream = fs.createReadStream(filePath);
-    readStream.pipe(res);
-  } else if (req.method === "POST" && req.url === "/send") {
-    let body = "";
-    req.on("data", (chunk) => {
-      body += chunk.toString();
+/* ====== SERVER ====== */
+async function startServer(port) {
+  const networkInterfaces = require("os").networkInterfaces();
+  let externalAddress;
+  Object.keys(networkInterfaces).forEach((interfaceName) => {
+    networkInterfaces[interfaceName].forEach((interfaceAddress) => {
+      if (interfaceAddress.family === "IPv4") {
+        externalAddress = interfaceAddress.address;
+      }
     });
-    req.on("end", () => {
-      console.log("Dados recebidos do navegador:", body);
-      res.end("Dados recebidos com sucesso!");
-    });
-  } else if (req.method === "GET" && req.url === "/get") {
-    // Envia dados para o navegador
-    res.end(JSON.stringify(params));
-  } else if (req.url === "/favicon.ico") {
-    // Ignora a requisição do favicon
-    res.end();
-    return;
-  }
-});
-let port = 3200;
-while (true) {
-  try {
-    server.listen(port);
-    break;
-  } catch (err) {
-    if (err.code === "EADDRINUSE") {
-      console.log(`Porta ${port} está  em uso, tentando outra...`);
-      port++;
-    } else {
-      throw err;
-    }
-  }
-}
-const address = server.address();
-const networkInterfaces = require("os").networkInterfaces();
-let externalAddress;
-Object.keys(networkInterfaces).forEach((interfaceName) => {
-  networkInterfaces[interfaceName].forEach((interfaceAddress) => {
-    if (interfaceAddress.family === "IPv4") {
-      externalAddress = interfaceAddress.address;
-    }
   });
-});
 
-params["server"] = address;
-params["server"]["external_address"] = `${externalAddress}:${address.port}`;
-params = validateParams(params);
-ipcMain.emit("on-data", params);
-
-async function serverVersion() {
-  const gitPackageJsonUrl =
-    "https://raw.githubusercontent.com/maycorolbuche/votofacil/main/package.json";
+  const url = `http://${externalAddress}:${port}`;
 
   try {
+    const server = http.createServer((req, res) => {
+      res.writeHead(200, { "Content-Type": "text/html" });
+      if (req.url === "/voter") {
+        const filePath = path.join(__dirname, "voter.html");
+        const readStream = fs.createReadStream(filePath);
+        readStream.pipe(res);
+      } else if (req.method === "POST" && req.url === "/send") {
+        let body = "";
+        req.on("data", (chunk) => {
+          body += chunk.toString();
+        });
+        req.on("end", () => {
+          console.log("Dados recebidos do navegador:", body);
+          res.end("Dados recebidos com sucesso!");
+        });
+      } else if (req.method === "GET" && req.url === "/get") {
+        // Envia dados para o navegador
+        res.end(JSON.stringify(params));
+      } else if (req.method === "GET" && req.url === "/test") {
+        res.end(hash);
+      } else if (req.url === "/favicon.ico") {
+        // Ignora a requisi o do favicon
+        res.end();
+        return;
+      }
+    });
+
+    server.listen(port);
+
+    let address = server.address();
+
     const response = await new Promise((resolve, reject) => {
-      const req = https.get(gitPackageJsonUrl, (res) => {
+      const req = http.get(`${url}/test`, (res) => {
         let data = "";
 
         res.on("data", (chunk) => {
@@ -144,19 +135,42 @@ async function serverVersion() {
       });
     });
 
-    const remotePackageJson = JSON.parse(response);
-    const remoteVersion = remotePackageJson.version;
+    if (response !== hash) {
+      throw new Error("Servidor não conectado!");
+    }
 
-    return remoteVersion;
+    return {
+      ...address,
+      port,
+      url,
+      connected: true,
+    };
   } catch (err) {
-    console.error("Error fetching the remote package.json:", err);
-    return null;
+    return {
+      port,
+      url,
+      message: err.message,
+      connected: false,
+    };
   }
 }
 
-function validateParams(params) {
-  if (!params["room_name"]) {
-    params["room_name"] = "Sala de Votação";
+(async () => {
+  let port = 5500;
+  while (true) {
+    data_server = await startServer(port);
+
+    params["server"] = data_server;
+    params = validateParams(params);
+
+    mainWindow.webContents.send("on-data", params);
+
+    console.log(data_server, port, params);
+
+    if (data_server.connected) {
+      break;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    port += 1;
   }
-  return Object.assign({}, { ...params });
-}
+})();

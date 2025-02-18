@@ -30,6 +30,16 @@
                     <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
                     <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
                     <li><a href="mobile.html"><i class="material-icons">more_vert</i></a></li>
+                    <li><a href="mobile.html"><i class="material-icons">portable_wifi_off</i></a></li>
+                    <li>
+                        <a href="mobile.html" data-app-if-class="server.connected"
+                            data-app-class-false="btn-floating pulse red darken-4">
+                            <i class="material-icons" data-app-if-text="server.connected"
+                                data-app-text-true="wifi_tethering" data-app-text-false="portable_wifi_off">
+                                search
+                            </i>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="nav-content">
@@ -79,6 +89,7 @@
                         <div class="card-text">
                             ...
                             <span data-app></span>
+                            [<span data-app="server.connected"></span>]
                         </div>
                     </div>
                     <div class="card-action">
@@ -149,7 +160,7 @@
             <div class="container">
                 Desenvolvedor:
                 <a href="https://maycorolbuche.com.br" target="_blank">
-                    Mayco Rolbuche |maycorolbuche.com.br
+                    Mayco Rolbuche | maycorolbuche.com.br
                 </a>
                 <a class="grey-text text-lighten-4 right" href="https://maycorolbuche.github.io/votofacil"
                     target="_blank">
