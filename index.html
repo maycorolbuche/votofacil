@@ -15,18 +15,61 @@
 
 <body id="app" class="blue-grey darken-4">
 
+    <!--| HEADER |-->
     <header>
-        <nav class="blue-grey darken-4">
+        <nav class="nav-extended blue-grey darken-4">
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo">VotoFácil</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">JavaScript</a></li>
+                <span class="brand-logo">
+                    VotoFácil
+                </span>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger">
+                    <i class="material-icons">menu</i>
+                </a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="sass.html"><i class="material-icons">search</i></a></li>
+                    <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
+                    <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
+                    <li><a href="mobile.html"><i class="material-icons">more_vert</i></a></li>
                 </ul>
+            </div>
+            <div class="nav-content">
+                <a class="waves-effect waves-light modal-trigger" href="#modal_room_name">
+                    <i class="material-icons">edit</i>
+                </a>
+                <span class="nav-title" data-app="room_name"></span>
             </div>
         </nav>
     </header>
+
+    <!--| MOBILE |-->
+    <ul class="sidenav blue-grey darken-4" id="mobile-demo">
+        <li><a class="white-text" href="sass.html">Sass</a></li>
+        <li><a class="white-text" href="badges.html">Components</a></li>
+        <li><a class="white-text" href="collapsible.html">Javascript</a></li>
+        <li><a class="white-text" href="mobile.html">Mobile</a></li>
+    </ul>
+
+    <!--| MODAL :: RENOMEAR SALA |-->
+    <div id="modal_room_name" class="modal bottom-sheet blue-grey darken-4">
+        <div class="modal-content">
+            <h4 class="white-text">Nome da Sala</h4>
+            <p class="white-text">Digite um nome para identificar a sala de votação:</p>
+            <div class="input-field col s6">
+                <input id="room_name" type="text" class="validate white-text" data-app="room_name">
+            </div>
+        </div>
+        <div class="modal-footer blue-grey darken-4">
+            <a href="#" class="modal-close btn waves-effect waves-light red darken-4" onclick="app.refresh();">
+                Cancelar
+            </a>
+            <a href="#" class="modal-close btn waves-effect waves-light teal darken-4"
+                onclick="app.set_param('room_name', document.getElementById('room_name').value);">
+                Salvar
+            </a>
+        </div>
+    </div>
+
+    <!--| MAIN |-->
     <main>
         <div class="row">
             <div class="col s12 m8">
@@ -34,29 +77,8 @@
                     <div class="card-content">
                         <span class="card-title">Card Title</span>
                         <div class="card-text">
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
-                            I am a very simple card. I am good at containing small bits of information. I am convenient
-                            because I require little markup to use effectively.
+                            ...
+                            <span data-app></span>
                         </div>
                     </div>
                     <div class="card-action">
@@ -102,6 +124,8 @@
                 </div>
             </div>
     </main>
+
+    <!--| FOOTER |-->
     <footer class="page-footer blue-grey darken-4">
         <div class="row">
             <div class="col s12">
@@ -123,8 +147,14 @@
         </div>
         <div class="footer-copyright">
             <div class="container">
-                © 2014 Copyright Text
-                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+                Desenvolvedor:
+                <a href="https://maycorolbuche.com.br" target="_blank">
+                    Mayco Rolbuche |maycorolbuche.com.br
+                </a>
+                <a class="grey-text text-lighten-4 right" href="https://github.com/maycorolbuche/votofacil"
+                    target="_blank">
+                    v. <span data-app="version"></span>
+                </a>
             </div>
         </div>
     </footer>

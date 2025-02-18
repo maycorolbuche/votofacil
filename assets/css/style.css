@@ -37,8 +37,30 @@ nav {
     box-shadow: initial;
 }
 
+nav .nav-content {
+    display: flex;
+    align-items: center;
+}
+
+nav .nav-content .nav-title {
+    padding: 0 0 0 10px;
+    font-weight: 100;
+}
+
+nav .nav-content a {
+    padding: 0 10px 0 10px;
+}
+
 .card .card-content {
     padding: 12px 16px;
+}
+
+footer .row {
+    margin: 0;
+}
+
+footer .card {
+    margin-bottom: 0;
 }
 
 /*body {

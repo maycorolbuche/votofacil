@@ -7,39 +7,6 @@ const fs = require("fs");
 let mainWindow;
 let params = {};
 
-async function serverVersion() {
-  const gitPackageJsonUrl =
-    "https://raw.githubusercontent.com/maycorolbuche/votofacil/main/package.json";
-
-  try {
-    const response = await new Promise((resolve, reject) => {
-      const req = https.get(gitPackageJsonUrl, (res) => {
-        let data = "";
-
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
-
-        res.on("end", () => {
-          resolve(data);
-        });
-      });
-
-      req.on("error", (err) => {
-        reject(err);
-      });
-    });
-
-    const remotePackageJson = JSON.parse(response);
-    const remoteVersion = remotePackageJson.version;
-
-    return remoteVersion;
-  } catch (err) {
-    console.error("Error fetching the remote package.json:", err);
-    return null;
-  }
-}
-
 app.on("ready", () => {
   mainWindow = new BrowserWindow({
     show: false,
@@ -68,6 +35,7 @@ app.on("ready", () => {
   // Capturar eventos
   ipcMain.on("get-data", (event) => {
     try {
+      params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
       console.log("Erro", err);
@@ -91,6 +59,7 @@ app.on("ready", () => {
   ipcMain.on("set-param", (event, data) => {
     try {
       params[data.name] = data.value;
+      params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
       console.log("Erro", err);
@@ -129,7 +98,7 @@ while (true) {
     break;
   } catch (err) {
     if (err.code === "EADDRINUSE") {
-      console.log(`Porta ${port} est  em uso, tentando outra...`);
+      console.log(`Porta ${port} está  em uso, tentando outra...`);
       port++;
     } else {
       throw err;
@@ -146,9 +115,48 @@ Object.keys(networkInterfaces).forEach((interfaceName) => {
     }
   });
 });
-console.log(
-  `Servidor rodando na porta ${address.port} - http://${
-    externalAddress || "localhost"
-  }:${address.port}`,
-  address
-);
+
+params["server"] = address;
+params["server"]["external_address"] = `${externalAddress}:${address.port}`;
+params = validateParams(params);
+ipcMain.emit("on-data", params);
+
+async function serverVersion() {
+  const gitPackageJsonUrl =
+    "https://raw.githubusercontent.com/maycorolbuche/votofacil/main/package.json";
+
+  try {
+    const response = await new Promise((resolve, reject) => {
+      const req = https.get(gitPackageJsonUrl, (res) => {
+        let data = "";
+
+        res.on("data", (chunk) => {
+          data += chunk;
+        });
+
+        res.on("end", () => {
+          resolve(data);
+        });
+      });
+
+      req.on("error", (err) => {
+        reject(err);
+      });
+    });
+
+    const remotePackageJson = JSON.parse(response);
+    const remoteVersion = remotePackageJson.version;
+
+    return remoteVersion;
+  } catch (err) {
+    console.error("Error fetching the remote package.json:", err);
+    return null;
+  }
+}
+
+function validateParams(params) {
+  if (!params["room_name"]) {
+    params["room_name"] = "Sala de Votação";
+  }
+  return Object.assign({}, { ...params });
+}

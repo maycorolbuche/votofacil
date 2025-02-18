@@ -1,22 +1,37 @@
 class App {
   id = null;
-  version = null;
-  server_version = null;
-  data = null;
+  data = {};
   init(id) {
     this.id = id;
     this.get_version();
     this.get_data();
     this.render();
   }
+  refresh() {
+    this.render();
+  }
   render() {
     const elements = document.querySelectorAll(`#${this.id} [data-app]`);
     elements.forEach((element) => {
-      const propName = element.getAttribute("data-app");
-      if (typeof this[propName] === "object") {
-        element.innerHTML = JSON.stringify(this[propName]);
+      let propName = "data";
+      if (element.getAttribute("data-app")) {
+        propName += "." + element.getAttribute("data-app");
+      }
+
+      const props = propName.split(".");
+      let value = this;
+      for (const prop of props) {
+        value = value[prop];
+      }
+
+      if (typeof value === "object") {
+        value = JSON.stringify(value);
+      }
+
+      if (element.tagName === "INPUT") {
+        element.value = value;
       } else {
-        element.innerHTML = this[propName];
+        element.innerHTML = value;
       }
     });
 
@@ -28,14 +43,13 @@ class App {
     document.querySelector(
       "main"
     ).style.height = `calc(100vh - ${headerHeight}px - ${footerHeight}px)`;
-    console.log("ddd");
   }
   get_version() {
     window.electronAPI.getVersion();
   }
   set_version(version) {
-    this.version = version.version;
-    this.server_version = version.server;
+    this.data.version = version.version;
+    this.data.server_version = version.server;
     this.render();
   }
   get_data() {
