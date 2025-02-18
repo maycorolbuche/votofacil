@@ -7,191 +7,127 @@
     <title>Voto Fácil</title>
     <link rel="icon" href="assets/favicon.png" type="image/ng">
 
-    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./node_modules/material-design-icons/iconfont/material-icons.css">
+    <link rel="stylesheet" href="./node_modules/materialize-css/dist/css/materialize.min.css">
+
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
-<body id="app" class="d-flex flex-column">
+<body id="app" class="blue-grey darken-4">
 
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <div class="display-6">VotoFácil</div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </li>
+    <header>
+        <nav class="blue-grey darken-4">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">VotoFácil</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">JavaScript</a></li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
-        </div>
-    </nav>
-
-    <div class="container-fluid text-center d-flex flex-column" style="flex:1">
-        <div class="row" style="flex:1">
-            <div class="col-12 col-md-8 mb-3">
-                <div class="card h-100 shadow">
-                    <div class="card-header">
-                        <h5 class="card-title text-start">Candidatos</h5>
-                    </div>
-                    <div class="card-body overflow-auto">
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.<br>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-4 mb-3">
-                <div class="card mb-3 shadow" style="height: calc(50% - 8px);">
-                    <div class="card-header">
-                        <h5 class="card-title text-start">Eleitores</h5>
-                    </div>
-                    <div class="card-body overflow-auto">
-                        <p class="card-text">
-                            Some quick example text to build on the card title and make up the bulk of
-                            the card's content.
-                        </p>
-                    </div>
-                </div>
-                <div class="card shadow" style="height: calc(50% - 8px);">
-                    <div class="card-header">
-                        <h5 class="card-title text-start">Dispositivos</h5>
-                    </div>
-                    <div class="card-body overflow-auto">
-                        <p class="card-text">
-                            Some quick example text to build on the card title and make up the bulk of
-                            the card's content.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </nav>
+    </header>
+    <main>
         <div class="row">
-            <div class="col-12 mb-3">
-                <div class="card h-100 shadow">
-                    <div class="card-header">
-                        <h5 class="card-title text-start">Opções</h5>
+            <div class="col s12 m8">
+                <div class="card blue-grey darken-3 white-text">
+                    <div class="card-content">
+                        <span class="card-title">Card Title</span>
+                        <div class="card-text">
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                        </div>
                     </div>
-                    <div class="card-body overflow-auto">
-                        <p class="card-text">
-                            Some quick example text to build on the card title and make up the bulk of
-                            the card's content.
-                        </p>
+                    <div class="card-action">
+                        <a href="#">This is a link</a>
+                        <a href="#">This is a link</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="card blue-grey darken-3 white-text">
+                    <div class="card-content">
+                        <span class="card-title">Card Title</span>
+                        <div class="card-text">
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                            I am a very simple card. I am good at containing small bits of information. I am convenient
+                            because I require little markup to use effectively.
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">This is a link</a>
+                        <a href="#">This is a link</a>
+                    </div>
+                </div>
+            </div>
+    </main>
+    <footer class="page-footer blue-grey darken-4">
+        <div class="row">
+            <div class="col s12">
+                <div class="card blue-grey darken-3 white-text">
+                    <div class="card-content">
+                        <span class="card-title">Opções</span>
+                        <div class="card-text">
+                            I am a very simple card. I am good at containing small bits of information. I am
+
+                            because I require little markup to use effectively.
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="#">This is a link</a>
+                        <a href="#">This is a link</a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2014 Copyright Text
+                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+        </div>
+    </footer>
     <!--
     OLA MUNDO
     <a href="javascript:" onclick="app.get_data()">AAAAA</a>
@@ -206,10 +142,17 @@
     <button onclick="app.set_param('test', document.getElementById('inputField').value);">Enviar</button>
 -->
 
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./node_modules/materialize-css/dist/js/materialize.min.js"></script>
 
     <script src="app.js"></script>
     <script src="renderer.js"></script>
+
+    <script>
+        M.AutoInit();
+        window.addEventListener('load', app.adjust_layout);
+        window.addEventListener('resize', app.adjust_layout);
+        app.adjust_layout();
+    </script>
 </body>
 
 </html>

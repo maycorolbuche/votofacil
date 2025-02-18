@@ -19,6 +19,16 @@ class App {
         element.innerHTML = this[propName];
       }
     });
+
+    this.adjust_layout();
+  }
+  adjust_layout() {
+    const headerHeight = document.querySelector("header").offsetHeight;
+    const footerHeight = document.querySelector("footer").offsetHeight;
+    document.querySelector(
+      "main"
+    ).style.height = `calc(100vh - ${headerHeight}px - ${footerHeight}px)`;
+    console.log("ddd");
   }
   get_version() {
     window.electronAPI.getVersion();

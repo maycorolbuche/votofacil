@@ -13,14 +13,15 @@
   "license": "ISC",
   "build": {
     "appId": "com.votofacil.app",
-    "productName": "Youtube Downloader",
+    "productName": "VotoFacil",
     "win": {
       "icon": "assets/icon.ico"
     }
   },
   "dependencies": {
-    "bootstrap": "^5.3.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "material-design-icons": "^3.0.1",
+    "materialize-css": "^1.0.0"
   },
   "devDependencies": {
     "electron": "^33.3.1",
