@@ -84,15 +84,18 @@ async function startServer(port) {
   });
 
   const url = `http://${externalAddress}:${port}`;
+  const url_voter = `http://${externalAddress}:${port}/voter`;
+  const url_viewer = `http://${externalAddress}:${port}/viewer`;
 
   try {
     const server = http.createServer((req, res) => {
-      res.writeHead(200, { "Content-Type": "text/html" });
       if (req.url === "/voter") {
-        const filePath = path.join(__dirname, "voter.html");
+        res.writeHead(200, { "Content-Type": "text/html" });
+        const filePath = path.join(__dirname, `${req.url}.html`);
         const readStream = fs.createReadStream(filePath);
         readStream.pipe(res);
       } else if (req.method === "POST" && req.url === "/send") {
+        res.writeHead(200, { "Content-Type": "text/html" });
         let body = "";
         req.on("data", (chunk) => {
           body += chunk.toString();
@@ -103,13 +106,35 @@ async function startServer(port) {
         });
       } else if (req.method === "GET" && req.url === "/get") {
         // Envia dados para o navegador
+        res.writeHead(200, { "Content-Type": "text/html" });
         res.end(JSON.stringify(params));
       } else if (req.method === "GET" && req.url === "/test") {
+        res.writeHead(200, { "Content-Type": "text/plain" });
         res.end(hash);
       } else if (req.url === "/favicon.ico") {
         // Ignora a requisi o do favicon
+        res.writeHead(200, { "Content-Type": "text/html" });
         res.end();
         return;
+      } else if (req.url.endsWith(".css")) {
+        res.writeHead(200, { "Content-Type": "text/css" });
+        const filePath = path.join(__dirname, req.url);
+        const readStream = fs.createReadStream(filePath);
+        readStream.pipe(res);
+      } else if (req.url.endsWith(".js")) {
+        res.writeHead(200, { "Content-Type": "application/javascript" });
+        const filePath = path.join(__dirname, req.url);
+        const readStream = fs.createReadStream(filePath);
+        readStream.pipe(res);
+      } else if (req.url.startsWith("/assets")) {
+        const filePath = path.join(__dirname, req.url);
+        const readStream = fs.createReadStream(filePath);
+        readStream.pipe(res);
+      } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        const filePath = path.join(__dirname, "server.html");
+        const readStream = fs.createReadStream(filePath);
+        readStream.pipe(res);
       }
     });
 
@@ -143,12 +168,16 @@ async function startServer(port) {
       ...address,
       port,
       url,
+      url_voter,
+      url_viewer,
       connected: true,
     };
   } catch (err) {
     return {
       port,
       url,
+      url_voter,
+      url_viewer,
       message: err.message,
       connected: false,
     };

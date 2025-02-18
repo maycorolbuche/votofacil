@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voto Fácil</title>
-    <link rel="icon" href="assets/favicon.png" type="image/ng">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
 
     <link rel="stylesheet" href="./node_modules/material-design-icons/iconfont/material-icons.css">
     <link rel="stylesheet" href="./node_modules/materialize-css/dist/css/materialize.min.css">
@@ -30,13 +30,11 @@
                     <li><a href="badges.html"><i class="material-icons">view_module</i></a></li>
                     <li><a href="collapsible.html"><i class="material-icons">refresh</i></a></li>
                     <li><a href="mobile.html"><i class="material-icons">more_vert</i></a></li>
-                    <li><a href="mobile.html"><i class="material-icons">portable_wifi_off</i></a></li>
                     <li>
-                        <a href="mobile.html" data-app-if-class="server.connected"
-                            data-app-class-false="btn-floating pulse red darken-4">
+                        <a href="#modal_server" class="waves-effect waves-light modal-trigger"
+                            data-app-if-class="server.connected" data-app-class-false="btn-floating pulse red darken-4">
                             <i class="material-icons" data-app-if-text="server.connected"
                                 data-app-text-true="wifi_tethering" data-app-text-false="portable_wifi_off">
-                                search
                             </i>
                         </a>
                     </li>
@@ -51,33 +49,21 @@
         </nav>
     </header>
 
-    <!--| MOBILE |-->
+    <!--| MENU MOBILE |-->
     <ul class="sidenav blue-grey darken-4" id="mobile-demo">
         <li><a class="white-text" href="sass.html">Sass</a></li>
         <li><a class="white-text" href="badges.html">Components</a></li>
         <li><a class="white-text" href="collapsible.html">Javascript</a></li>
-        <li><a class="white-text" href="mobile.html">Mobile</a></li>
+        <li>
+            <a href="#modal_server" class="white-text modal-trigger">
+                <i class="material-icons white-text" data-app-if-text="server.connected"
+                    data-app-text-true="wifi_tethering" data-app-text-false="portable_wifi_off">
+                </i>
+                Conexão
+            </a>
+        </li>
     </ul>
 
-    <!--| MODAL :: RENOMEAR SALA |-->
-    <div id="modal_room_name" class="modal bottom-sheet blue-grey darken-4">
-        <div class="modal-content">
-            <h4 class="white-text">Nome da Sala</h4>
-            <p class="white-text">Digite um nome para identificar a sala de votação:</p>
-            <div class="input-field col s6">
-                <input id="room_name" type="text" class="validate white-text" data-app="room_name">
-            </div>
-        </div>
-        <div class="modal-footer blue-grey darken-4">
-            <a href="#" class="modal-close btn waves-effect waves-light red darken-4" onclick="app.refresh();">
-                Cancelar
-            </a>
-            <a href="#" class="modal-close btn waves-effect waves-light teal darken-4"
-                onclick="app.set_param('room_name', document.getElementById('room_name').value);">
-                Salvar
-            </a>
-        </div>
-    </div>
 
     <!--| MAIN |-->
     <main>
@@ -169,6 +155,68 @@
             </div>
         </div>
     </footer>
+
+
+
+
+    <!--| MODAIS |-->
+
+    <!--| MODAL :: RENOMEAR SALA |-->
+    <div id="modal_room_name" class="modal bottom-sheet blue-grey darken-3">
+        <div class="modal-content">
+            <h4 class="white-text">Nome da Sala</h4>
+            <p class="white-text">Digite um nome para identificar a sala de votação:</p>
+            <div class="input-field col s6">
+                <input id="room_name" type="text" class="blue-grey darken-2 white-text" data-app="room_name"
+                    onkeyup="event.keyCode === 13 ? document.getElementById('bt_room_name_save').click() : null;">
+            </div>
+        </div>
+        <div class="modal-footer blue-grey darken-4">
+            <a href="#" class="modal-close btn waves-effect waves-light red darken-4" onclick="app.refresh();">
+                Cancelar
+            </a>
+            <a id="bt_room_name_save" href="#" class="modal-close btn waves-effect waves-light teal darken-4"
+                onclick="app.set_param('room_name', document.getElementById('room_name').value);">
+                Salvar
+            </a>
+        </div>
+    </div>
+
+    <!--| MODAL :: SERVER |-->
+    <div id="modal_server" class="modal bottom-sheet blue-grey darken-3">
+        <div class="modal-content">
+            <h4 class="white-text">Status da Conexão</h4>
+
+            <div style="display: flex;align-items: center;">
+                <i class="material-icons white-text" data-app-if-text="server.connected"
+                    data-app-text-true="wifi_tethering" data-app-text-false="portable_wifi_off">
+                </i>
+                <span class="white-text" data-app-if-text="server.connected" data-app-text-true="Conectado!"
+                    data-app-text-false="Aguardando conexão...." style="padding-left:10px;">
+                </span>
+            </div>
+
+            <div style="display: flex;align-items: center;padding-top: 10px;">
+                <i class="material-icons white-text">
+                    people
+                </i>
+                <span class="white-text" href="#" data-app="server.url_voter" style="padding-left:10px;"></span>
+            </div>
+
+            <div style="display: flex;align-items: center;padding-top: 10px;">
+                <i class="material-icons white-text">
+                    cast
+                </i>
+                <span class="white-text" href="#" data-app="server.url_viewer" style="padding-left:10px;"></span>
+            </div>
+
+        </div>
+        <div class="modal-footer blue-grey darken-4">
+            <a href="#" class="modal-close btn waves-effect waves-light" onclick="app.refresh();">
+                Fechar
+            </a>
+        </div>
+    </div>
     <!--
     OLA MUNDO
     <a href="javascript:" onclick="app.get_data()">AAAAA</a>
