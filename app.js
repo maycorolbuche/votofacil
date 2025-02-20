@@ -99,10 +99,23 @@ class App {
   }
   add_candidate(name) {
     if (document.getElementById("candidate_name").value.trim() == "") {
+      this.error("Digite o nome do candidato!");
+      return;
+    }
+    if (
+      Object.values(this.data.candidates).some(
+        (candidate) => candidate.name === name
+      )
+    ) {
+      this.error(`O candidato "${name}" já existe!`);
+      document.getElementById("candidate_name").value = "";
       return;
     }
     window.electronAPI.addCandidate(name);
     document.getElementById("candidate_name").value = "";
+  }
+  error(message) {
+    M.toast({ html: message, classes: "red darken-4" });
   }
   tag_value(element, property) {
     let propName = "data";

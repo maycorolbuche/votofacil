@@ -11,4 +11,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   //ON
   onData: (callback) =>
     ipcRenderer.on("on-data", (event, text) => callback(text)),
+  onError: (callback) =>
+    ipcRenderer.on("on-error", (event, text) => callback(text)),
 });

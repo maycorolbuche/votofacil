@@ -41,6 +41,7 @@ app.on("ready", () => {
       params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
+      event.reply("on-error", err);
       console.log("Erro", err);
     }
   });
@@ -53,6 +54,7 @@ app.on("ready", () => {
       params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
+      event.reply("on-error", err);
       console.log("Erro", err);
     }
   });
@@ -62,16 +64,18 @@ app.on("ready", () => {
       params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
+      event.reply("on-error", err);
       console.log("Erro", err);
     }
   });
 
   ipcMain.on("add-candidate", (event, name) => {
     try {
-      params["candidates"][uuidv4()] = name;
+      params["candidates"][uuidv4()] = { name: name.trim() };
       params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
+      event.reply("on-error", err);
       console.log("Erro", err);
     }
   });
