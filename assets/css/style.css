@@ -88,6 +88,38 @@ input {
     margin: 0 10px 0 10px;
 }
 
+.card-people {
+    margin: 0;
+    padding: 5px 0;
+}
+
+.avatar {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    cursor: initial;
+}
+
+.card-row {
+    display: flex;
+    align-items: center;
+}
+
+.card-col {
+    padding: 0 5px;
+}
+
+.card-name {
+    font-size: 16px;
+}
+
+.card-votes {
+    font-size: 10px;
+    text-align: right;
+}
+
 /*body {
     display: flex;
     min-height: 100vh;

@@ -84,10 +84,18 @@ class App {
     });
   }
   get_version() {
-    window.electronAPI.getVersion();
+    try {
+      window.electronAPI.getVersion();
+    } catch (err) {
+      this.error(err);
+    }
   }
   get_data() {
-    window.electronAPI.getData();
+    try {
+      window.electronAPI.getData();
+    } catch (err) {
+      this.error(err);
+    }
   }
   set_data(data) {
     this.data = data;
@@ -103,6 +111,7 @@ class App {
       return;
     }
     if (
+      this.data.candidates &&
       Object.values(this.data.candidates).some(
         (candidate) => candidate.name === name
       )
@@ -111,8 +120,12 @@ class App {
       document.getElementById("candidate_name").value = "";
       return;
     }
-    window.electronAPI.addCandidate(name);
-    document.getElementById("candidate_name").value = "";
+    try {
+      window.electronAPI.addCandidate(name);
+      document.getElementById("candidate_name").value = "";
+    } catch (err) {
+      this.error(err);
+    }
   }
   error(message) {
     M.toast({ html: message, classes: "red darken-4" });
