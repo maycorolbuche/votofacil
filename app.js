@@ -6,6 +6,7 @@ class App {
     this.get_version();
     this.get_data();
     this.render();
+    this.render_components();
   }
   refresh() {
     this.render();
@@ -70,6 +71,18 @@ class App {
       "main"
     ).style.height = `calc(100vh - ${headerHeight}px - ${footerHeight}px)`;
   }
+  render_components() {
+    document.querySelectorAll("[onenter]").forEach((element) => {
+      element.setAttribute(
+        "onkeyup",
+        `event.keyCode === 13 ? ${element.getAttribute("onenter")} : null;`
+      );
+    });
+
+    document.querySelectorAll(".__input__").forEach((element) => {
+      element.classList.add("blue-grey", "darken-2", "white-text");
+    });
+  }
   get_version() {
     window.electronAPI.getVersion();
   }
@@ -88,6 +101,13 @@ class App {
   }
   set_param(name, value) {
     window.electronAPI.setParam(name, value);
+  }
+  add_candidate(name) {
+    if (document.getElementById("candidate_name").value.trim() == "") {
+      return;
+    }
+    window.electronAPI.addCandidate(name);
+    document.getElementById("candidate_name").value = "";
   }
   tag_value(element, property) {
     let propName = "data";

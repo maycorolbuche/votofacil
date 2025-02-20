@@ -71,6 +71,23 @@ footer .card {
     border: initial;
 }
 
+.card .card-action {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px 4px 6px;
+}
+
+input {
+    margin: 0 !important;
+}
+
+.separator {
+    height: 40px;
+    width: 1px;
+    border-left: 1px solid rgba(160, 160, 160, 0.2);
+    margin: 0 10px 0 10px;
+}
+
 /*body {
     display: flex;
     min-height: 100vh;

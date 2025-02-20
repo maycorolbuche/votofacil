@@ -2,14 +2,13 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const http = require("http");
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 const { serverVersion, validateParams } = require("./node/functions");
 
 let mainWindow;
 let params = {};
-const hash =
-  Math.random().toString(36).substring(2, 10) +
-  new Date().getTime().toString(36);
+const hash = uuidv4();
 
 app.on("ready", () => {
   mainWindow = new BrowserWindow({
@@ -63,6 +62,16 @@ app.on("ready", () => {
   ipcMain.on("set-param", (event, data) => {
     try {
       params[data.name] = data.value;
+      params = validateParams(params);
+      event.reply("on-data", params);
+    } catch (err) {
+      console.log("Erro", err);
+    }
+  });
+
+  ipcMain.on("add-candidate", (event, name) => {
+    try {
+      params["candidates"][uuidv4()] = name;
       params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {

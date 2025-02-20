@@ -37,6 +37,9 @@ function validateParams(params) {
   if (!params["room_name"]) {
     params["room_name"] = "Sala de Votação";
   }
+  if (!params["candidates"]) {
+    params["candidates"] = {};
+  }
   return Object.assign({}, { ...params });
 }
 

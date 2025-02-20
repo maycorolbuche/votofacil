@@ -71,7 +71,7 @@
             <div class="col s12 m8">
                 <div class="card blue-grey darken-3 white-text">
                     <div class="card-content">
-                        <span class="card-title">Card Title</span>
+                        <span class="card-title">Candidatos</span>
                         <div class="card-text">
                             ...
                             <span data-app></span>
@@ -79,8 +79,19 @@
                         </div>
                     </div>
                     <div class="card-action">
-                        <a href="#">This is a link</a>
-                        <a href="#">This is a link</a>
+                        <div style="padding-right: 10px;flex:1;">
+                            <input id="candidate_name" type="text" class="__input__"
+                                placeholder="Digite o nome do candidato..."
+                                onenter="document.getElementById('bt_add_candidate').click()">
+                        </div>
+                        <a id="bt_add_candidate" class="btn-floating waves-effect waves-light white-text" href="#"
+                            onclick="app.add_candidate(document.getElementById('candidate_name').value);">
+                            <i class="material-icons">add</i>
+                        </a>
+                        <div class="separator"></div>
+                        <a class="waves-effect waves-light white-text" href="#">
+                            <i class="material-icons">more_vert</i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -167,8 +178,8 @@
             <h4 class="white-text">Nome da Sala</h4>
             <p class="white-text">Digite um nome para identificar a sala de votação:</p>
             <div class="input-field col s6">
-                <input id="room_name" type="text" class="blue-grey darken-2 white-text" data-app="room_name"
-                    onkeyup="event.keyCode === 13 ? document.getElementById('bt_room_name_save').click() : null;">
+                <input id="room_name" type="text" class="__input__" data-app="room_name"
+                    onenter="document.getElementById('bt_room_name_save').click()">
             </div>
         </div>
         <div class="modal-footer blue-grey darken-4">
