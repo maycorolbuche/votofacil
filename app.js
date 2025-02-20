@@ -86,11 +86,6 @@ class App {
   get_version() {
     window.electronAPI.getVersion();
   }
-  set_version(version) {
-    this.data.version = version.version;
-    this.data.server_version = version.server;
-    this.render();
-  }
   get_data() {
     window.electronAPI.getData();
   }

@@ -47,14 +47,11 @@ app.on("ready", () => {
   ipcMain.on("get-version", async (event) => {
     try {
       const packageJson = require("./package.json");
-      event.reply("on-version", {
-        version: packageJson.version,
-        server: null,
-      });
-      event.reply("on-version", {
-        version: packageJson.version,
-        server: await serverVersion(),
-      });
+
+      params["version"] = packageJson.version;
+      params["server_version"] = await serverVersion();
+      params = validateParams(params);
+      event.reply("on-data", params);
     } catch (err) {
       console.log("Erro", err);
     }
@@ -202,8 +199,6 @@ async function startServer(port) {
     params = validateParams(params);
 
     mainWindow.webContents.send("on-data", params);
-
-    console.log(data_server, port, params);
 
     if (data_server.connected) {
       break;
