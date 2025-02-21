@@ -4,11 +4,15 @@
     <div class="row" style="height:100%;margin:0;padding:0;">
         <div class="col s12 m8" style="height:100%;margin:0;padding:5px;">
             <div class="card blue-grey darken-3" style="height:100%;">
-                <span class="card-title">Candidatos</span>
-                <div class="card-text" data-list="candidates" data-template="card-people">
-
-                    ...
-                    <pre data style="text-wrap: initial;overflow-wrap: anywhere;"></pre>
+                <span class="card-title" style="display:flex">
+                    <div style="flex:1">Candidatos</div>
+                    <div style="display: flex;align-items: flex-end;">
+                        <div style="font-size:12px;">Zoom:</div>
+                        <input id="candidates_zoom" type="number" class="white-text" value="100"
+                            style="width: 59px;text-align: center;height: 28px;" onchange="app.render_lists();">
+                    </div>
+                </span>
+                <div class="card-text" data-list="candidates" data-zoom="candidates_zoom" data-template="card-people">
                 </div>
                 <div class="card-action">
                     <div style="padding-right: 10px;flex:1;">
@@ -80,7 +84,6 @@
         },
         after_data: function () {
             this.adjust_layout();
-            app.render_lists();
         },
         adjust_layout: function () {
             console.log("RESIZE");

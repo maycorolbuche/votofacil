@@ -79,6 +79,17 @@ app.on("ready", () => {
       console.log("Erro", err);
     }
   });
+
+  ipcMain.on("remove-candidate", (event, key) => {
+    try {
+      delete params["candidates"][key];
+      params = validateParams(params);
+      event.reply("on-data", params);
+    } catch (err) {
+      event.reply("on-error", err);
+      console.log("Erro", err);
+    }
+  });
 });
 
 /* ====== SERVER ====== */

@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getVersion: () => ipcRenderer.send("get-version"),
   setParam: (name, value) => ipcRenderer.send("set-param", { name, value }),
   addCandidate: (name) => ipcRenderer.send("add-candidate", name),
+  removeCandidate: (key) => ipcRenderer.send("remove-candidate", key),
 
   //ON
   onData: (callback) =>

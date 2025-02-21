@@ -7,7 +7,7 @@
         </div>
         <div class="card-col" style="flex: 1;">
             <div class="card-row card-name">
-                José Alves do Nascimento
+                {{ candidates.#key.name }}&nbsp;
             </div>
             <div class="card-row">
                 <div class="card-col" style="flex: 1;">
@@ -23,6 +23,7 @@
                 <div class="card-col card-votes">
                     1452 votos
                 </div>
+                <a href="#" onclick="app.remove_candidate('#key');">APAGAR</a>
             </div>
         </div>
     </div>

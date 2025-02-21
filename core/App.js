@@ -25,7 +25,7 @@ class App {
       }
     }
   }
-  async load_file(element, url) {
+  async load_file(element, url, inner = false) {
     try {
       const response = await fetch(url);
       const text = await response.text();
@@ -67,7 +67,11 @@ class App {
         el.removeAttribute("data-attrs");
       });
 
-      element.outerHTML = tempDiv.innerHTML;
+      if (inner) {
+        element.innerHTML = tempDiv.innerHTML;
+      } else {
+        element.outerHTML = tempDiv.innerHTML;
+      }
 
       // Executa os scripts no conteúdo carregado
       const scripts = tempDiv.querySelectorAll("script");
@@ -128,8 +132,9 @@ class App {
       //this.error(err);
     }
   }
-  set_data(data) {
+  async set_data(data) {
     this.data = data;
+    await this.render_lists();
     this.render_data();
 
     if (typeof Page != "undefined") {
@@ -196,28 +201,88 @@ class App {
       }
     });
   }
+  async render_lists() {
+    const elements = document.querySelectorAll("[data-list]");
 
-  render_lists() {
-    document.querySelectorAll("[data-list]").forEach((element) => {
-      let list = element.getAttribute("data-list");
-      let template = element.getAttribute("data-template");
-      let data = this.data[list];
+    for (const element of elements) {
+      if (element.getAttribute("render")) {
+        continue;
+      }
+      element.setAttribute("render", true);
+      const list = element.getAttribute("data-list");
+      const zoom = element.getAttribute("data-zoom");
+      const template = element.getAttribute("data-template");
+      const data = this.data[list];
+      const cl_height = element.clientHeight;
+      let top = 5;
+      let left = 5;
 
-      element.innerHTML = "";
+      element
+        .querySelectorAll("[data-id]")
+        .forEach((el) => el.setAttribute("remove", true));
 
-      Object.keys(data).forEach((key) => {
+      for (const key of Object.keys(data)) {
         console.log(key, data[key]);
 
-        let elementItem = document.createElement("div");
-        elementItem.setAttribute("data-id", key);
-        element.appendChild(elementItem);
+        let elementItem = element.querySelector(`[data-id="${key}"]`);
+        if (!elementItem) {
+          elementItem = document.createElement("div");
+          elementItem.setAttribute("data-id", key);
+          elementItem.style.width = "fit-content";
+          elementItem.style.position = "absolute";
+          elementItem.style.top = "-100px";
+          elementItem.style.left = "-100px";
+          element.appendChild(elementItem);
 
-        this.load_file(elementItem, `./templates/${template}.html`);
+          await this.load_file(
+            elementItem,
+            `./templates/${template}.html`,
+            true
+          );
+
+          elementItem.innerHTML = elementItem.innerHTML.replace(/#key/g, key);
+        }
+
+        if (zoom) {
+          const v_zoom = document.getElementById(zoom).value / 100;
+          console.log("zoom", zoom);
+          elementItem.querySelector("*").style.zoom = v_zoom;
+        }
+
+        const rect = elementItem.getBoundingClientRect();
+        const height = rect.height + 10;
+        const width = rect.width + 10;
+
+        if (top + height > cl_height) {
+          top = 5;
+          left += width;
+        }
+
+        elementItem.style.top = `${top}px`;
+        elementItem.style.left = `${left}px`;
+
+        elementItem.setAttribute("data-width", width);
+        elementItem.setAttribute("data-height", height);
+        elementItem.setAttribute("data-top", top);
+        elementItem.setAttribute("data-left", left);
+        elementItem.setAttribute("data-client-height", cl_height);
+        elementItem.removeAttribute("remove");
+
+        console.log("elementItem", { width, height, top, left, cl_height });
+        top += height;
+      }
+
+      element.querySelectorAll("[data-id][remove]").forEach((el) => {
+        el.style.transition = "opacity 0.5s";
+        el.style.opacity = 0;
+        setTimeout(() => el.remove(), 500);
       });
 
       console.log(list, data, template);
-    });
+      element.removeAttribute("render");
+    }
   }
+
   tag_value(element, property) {
     let propName = "data";
     if (element.getAttribute(property)) {
@@ -274,6 +339,14 @@ class App {
     try {
       window.electronAPI.addCandidate(name);
       document.getElementById("candidate_name").value = "";
+    } catch (err) {
+      this.error(err);
+    }
+  }
+
+  remove_candidate(key) {
+    try {
+      window.electronAPI.removeCandidate(key);
     } catch (err) {
       this.error(err);
     }
