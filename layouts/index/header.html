@@ -1,0 +1,88 @@
+<!--| HEADER |-->
+<header>
+    <nav class="nav-extended blue-grey darken-4">
+        <div class="nav-wrapper">
+            <span class="brand-logo">
+                VotoFácil
+            </span>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger">
+                <i class="material-icons">menu</i>
+            </a>
+            <ul class="right hide-on-med-and-down">
+                <component data="menu-header"></component>
+            </ul>
+        </div>
+        <div class="nav-content">
+            <a class="waves-effect waves-light modal-trigger" href="#modal_room_name">
+                <i class="material-icons">edit</i>
+            </a>
+            <span class="nav-title">{{ room_name }}</span>
+        </div>
+    </nav>
+</header>
+
+<!--| MENU MOBILE |-->
+<ul class="sidenav blue-grey darken-4" id="mobile-demo">
+    <component data="menu-header"></component>
+</ul>
+
+<!--| MODAL :: RENOMEAR SALA |-->
+<div id="modal_room_name" class="modal bottom-sheet blue-grey darken-3">
+    <div class="modal-content">
+        <h4 class="white-text">Nome da Sala</h4>
+        <p class="white-text">Digite um nome para identificar a sala de votação:</p>
+        <div class="input-field col s6">
+            <component data="input" data-id="room_name" data-data="room_name"
+                data-onenter="document.getElementById('bt_room_name_save').click()"></component>
+        </div>
+    </div>
+    <div class="modal-footer blue-grey darken-4">
+        <a href="#" class="modal-close btn waves-effect waves-light red darken-4" onclick="app.refresh();">
+            Cancelar
+        </a>
+        <a id="bt_room_name_save" href="#" class="modal-close btn waves-effect waves-light teal darken-4"
+            onclick="app.set_param('room_name', document.getElementById('room_name').value);">
+            Salvar
+        </a>
+    </div>
+</div>
+
+<!--| MODAL :: SERVER |-->
+<div id="modal_server" class="modal bottom-sheet blue-grey darken-3">
+    <div class="modal-content">
+        <h4 class="white-text">Status da Conexão</h4>
+
+        <div style="display: flex;align-items: center;">
+            <i class="material-icons white-text">
+                {{ server.connected ? wifi_tethering : portable_wifi_off }}
+            </i>
+            <span class="white-text" style="padding-left:10px;">
+                {{ server.connected ? Conectado! : Aguardando conexão.... }}
+            </span>
+        </div>
+
+        <div style="display: flex;align-items: center;padding-top: 10px;">
+            <i class="material-icons white-text">
+                people
+            </i>
+            <span class="white-text" style="padding-left:10px;">
+                {{ server.url_voter}}
+            </span>
+        </div>
+
+        <div style="display: flex;align-items: center;padding-top: 10px;">
+            <i class="material-icons white-text">
+                cast
+            </i>
+            <span class="white-text" style="padding-left:10px;">
+                {{ server.url_viewer }}
+            </span>
+        </div>
+
+    </div>
+    <div class="modal-footer blue-grey darken-4">
+        <a href="#" class="modal-close btn waves-effect waves-light">
+            Fechar
+        </a>
+    </div>
+</div>

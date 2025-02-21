@@ -101,7 +101,7 @@ async function startServer(port) {
     const server = http.createServer((req, res) => {
       if (req.url === "/voter") {
         res.writeHead(200, { "Content-Type": "text/html" });
-        const filePath = path.join(__dirname, `${req.url}.html`);
+        const filePath = path.join(__dirname, `index.html`);
         const readStream = fs.createReadStream(filePath);
         readStream.pipe(res);
       } else if (req.method === "POST" && req.url === "/send") {
@@ -136,7 +136,12 @@ async function startServer(port) {
         const filePath = path.join(__dirname, req.url);
         const readStream = fs.createReadStream(filePath);
         readStream.pipe(res);
-      } else if (req.url.startsWith("/assets")) {
+      } else if (
+        req.url.startsWith("/assets") ||
+        req.url.startsWith("/core") ||
+        req.url.startsWith("/views") ||
+        req.url.startsWith("/components")
+      ) {
         const filePath = path.join(__dirname, req.url);
         const readStream = fs.createReadStream(filePath);
         readStream.pipe(res);
