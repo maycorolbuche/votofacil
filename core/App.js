@@ -17,13 +17,19 @@ class App {
 
     this.render_attrs();
 
-    M.AutoInit();
+    this.js_init();
 
     if (typeof Page != "undefined") {
       if (typeof Page.init != "undefined") {
         Page.init();
       }
     }
+  }
+  js_init() {
+    M.AutoInit();
+  }
+  refresh() {
+    this.render_data();
   }
   async load_file(element, url, inner = false) {
     try {
@@ -86,7 +92,9 @@ class App {
         document.body.removeChild(newScript);
       });
     } catch (error) {
-      element.outerHTML = `<span class='red-text'>Erro ao carregar elemento "${url}" ${error}</span>`;
+      try {
+        element.outerHTML = `<span class='red-text'>Erro ao carregar elemento "${url}" ${error}</span>`;
+      } catch (error) {}
     }
   }
   async load_components(type) {
@@ -172,6 +180,8 @@ class App {
       vtrue = vtrue.split(":")[0].trim();
       vif = vif.split(":")[0].trim();
 
+      let remove_class = element.getAttribute("data-class-remove") ?? "";
+
       element.setAttribute("data-class-if", vif.trim());
       element.setAttribute("data-class-true", vtrue.trim());
       element.setAttribute("data-class-false", vfalse.trim());
@@ -179,16 +189,13 @@ class App {
       const value = this.tag_value(element, "data-class-if");
 
       let tag_class = "";
-      let classes = "";
+      let classes = `${vtrue} ${vfalse} ${remove_class}`;
       if (vtrue == "" && vfalse == "") {
         tag_class = value;
-        classes = element.getAttribute("class");
       } else if (value) {
         tag_class = vtrue ?? "";
-        classes = `${vtrue} ${vfalse}`;
       } else {
         tag_class = vfalse ?? "";
-        classes = `${vtrue} ${vfalse}`;
       }
 
       classes = classes.replace(/\s+/g, " ").trim();
@@ -199,6 +206,18 @@ class App {
       if (tag_class != "") {
         element.classList.add(...tag_class.split(" "));
       }
+
+      if (element?.getAttribute("data-class-adic")) {
+        try {
+          let class_adic = this.tag_value(element, "data-class-adic");
+          element.classList.add(...class_adic.split(" "));
+        } catch (error) {}
+      }
+    });
+
+    document.querySelectorAll("[data-width]").forEach((element) => {
+      const value = this.tag_value(element, "data-width");
+      element.style.width = `${value}px`;
     });
   }
   async render_lists() {
@@ -241,6 +260,10 @@ class App {
           );
 
           elementItem.innerHTML = elementItem.innerHTML.replace(/#key/g, key);
+          elementItem.innerHTML = elementItem.innerHTML.replace(
+            /#list_colors/g,
+            "red pink purple deep-purple indigo blue light-blue cyan teal green light-green lime yellow amber orange deep-orange brown grey blue-grey black white"
+          );
         }
 
         if (zoom) {
@@ -273,6 +296,7 @@ class App {
       }
 
       element.querySelectorAll("[data-id][remove]").forEach((el) => {
+        el.innerHTML = el.innerHTML.replace(/data-/g, "d-");
         el.style.transition = "opacity 0.5s";
         el.style.opacity = 0;
         setTimeout(() => el.remove(), 500);
@@ -281,6 +305,9 @@ class App {
       console.log(list, data, template);
       element.removeAttribute("render");
     }
+
+    this.js_init();
+    await this.load_components("component");
   }
 
   tag_value(element, property) {
@@ -352,9 +379,7 @@ class App {
     }
   }
   /*
-  refresh() {
-    this.render_data();
-  }
+
   adjust_layout() {
     const headerHeight = document.querySelector("header").offsetHeight;
     const footerHeight = document.querySelector("footer").offsetHeight;

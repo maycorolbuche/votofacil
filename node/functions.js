@@ -43,4 +43,18 @@ function validateParams(params) {
   return Object.assign({}, { ...params });
 }
 
-module.exports = { serverVersion, validateParams };
+function initials(name) {
+  const nameParts = name.trim().split(" ");
+  if (nameParts.length === 1) {
+    return name.length > 1
+      ? name.slice(0, 2).toUpperCase()
+      : name.toUpperCase();
+  }
+  const firstNameInitial = nameParts[0].charAt(0).toUpperCase();
+  const lastNameInitial = nameParts[nameParts.length - 1]
+    .charAt(0)
+    .toUpperCase();
+  return firstNameInitial + lastNameInitial;
+}
+
+module.exports = { serverVersion, validateParams, initials };

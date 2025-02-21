@@ -4,7 +4,7 @@ const http = require("http");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 
-const { serverVersion, validateParams } = require("./node/functions");
+const { serverVersion, validateParams, initials } = require("./node/functions");
 
 let mainWindow;
 let params = {};
@@ -60,7 +60,19 @@ app.on("ready", () => {
   });
   ipcMain.on("set-param", (event, data) => {
     try {
-      params[data.name] = data.value;
+      const key = data.name.split(".");
+      if (key.length > 1) {
+        let obj = params;
+        for (let i = 0; i < key.length - 1; i++) {
+          if (!obj.hasOwnProperty(key[i])) {
+            obj[key[i]] = {};
+          }
+          obj = obj[key[i]];
+        }
+        obj[key[key.length - 1]] = data.value;
+      } else {
+        params[data.name] = data.value;
+      }
       params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
@@ -71,7 +83,34 @@ app.on("ready", () => {
 
   ipcMain.on("add-candidate", (event, name) => {
     try {
-      params["candidates"][uuidv4()] = { name: name.trim() };
+      /*params["candidates"][uuidv4()] = {
+        name: name.trim(),
+        voters_votes: 0,
+        admin_votes: 0,
+        votes: 0,
+        votes_text: "nenhum voto",
+        initials: initials(name),
+        avatar: initials(name),
+        position: 1,
+        percent: 0,
+        highlight:false,
+        color: "teal",
+      };*/
+      params["candidates"][uuidv4()] = {
+        name: name.trim(),
+        voters_votes: 0,
+        admin_votes: 0,
+        votes: 0,
+        votes_text: "nenhum voto",
+        initials: initials(name),
+        avatar: initials(name),
+        position: 1,
+        percent: Math.floor(Math.random() * 101),
+        highlight: Math.random() >= 0.5,
+        color: ["teal", "pink", "red", "blue", "green", "orange"][
+          Math.floor(Math.random() * 6)
+        ],
+      };
       params = validateParams(params);
       event.reply("on-data", params);
     } catch (err) {
