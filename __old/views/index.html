@@ -1,0 +1,99 @@
+<layout data="index.header"></layout>
+
+<main>
+    <div class="row" style="height:100%;margin:0;padding:0;">
+        <div class="col s12 m8" style="height:100%;margin:0;padding:5px;">
+            <div class="card blue-grey darken-3" style="height:100%;">
+                <span class="card-title" style="display:flex">
+                    <div style="flex:1">Candidatos</div>
+                    <div style="display: flex;align-items: flex-end;">
+                        <div style="font-size:12px;">Zoom:</div>
+                        <input id="candidates_zoom" type="number" class="white-text" value="100"
+                            style="width: 59px;text-align: center;height: 28px;" onchange="app.render_lists();">
+                    </div>
+                </span>
+                <div class="card-text" data-list="candidates" data-zoom="candidates_zoom" data-template="card-people">
+                </div>
+                <div class="card-action">
+                    <div style="padding-right: 10px;flex:1;">
+                        <component data="input" data-id="candidate_name"
+                            data-placeholder="Digite o nome do candidato..."
+                            data-onenter="document.getElementById('bt_add_candidate').click()">
+                    </div>
+                    <a id="bt_add_candidate" class="btn-floating waves-effect waves-light white-text" href="#"
+                        onclick="app.add_candidate(document.getElementById('candidate_name').value);">
+                        <i class="material-icons">add</i>
+                    </a>
+                    <div class="separator"></div>
+                    <a class="waves-effect waves-light white-text" href="#">
+                        <i class="material-icons">more_vert</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 m4" style="height:100%;">
+            <div class="card blue-grey darken-3" style="height:100%;">
+                <span class="card-title">Candidatos</span>
+                <div class="card-text">
+                    <pre data="candidates" style="text-wrap: auto;"></pre>
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+                    fdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfdsfdsfds<br>sdfdsfds
+
+
+                    ...
+                    <span data-app></span>
+                    [<span data-app="server.connected"></span>]
+                </div>
+                <div class="card-action">
+                    ACTS
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<layout data="index.footer"></layout>
+
+<script>
+    var Page = {
+        init: function () {
+            window.electronAPI.onData((data) => {
+                app.set_data(data);
+            });
+
+            window.electronAPI.onError((data) => {
+                app.error(data);
+            });
+
+            app.get_version();
+            app.get_data();
+
+            this.adjust_layout();
+        },
+        resize: function () {
+            this.adjust_layout();
+            app.render_lists();
+        },
+        after_data: function () {
+            this.adjust_layout();
+        },
+        adjust_layout: function () {
+            console.log("RESIZE");
+            const headerHeight = document.querySelector("header").offsetHeight;
+            const footerHeight = document.querySelector("footer").offsetHeight;
+            const screenHeight = window.innerHeight;
+            const mainElement = document.querySelector("main");
+
+            mainElement.style.height = `${screenHeight - headerHeight - footerHeight}px`;
+        }
+    };
+</script>

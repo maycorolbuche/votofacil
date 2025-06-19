@@ -1,33 +1,13 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voto Fácil</title>
-    <link rel="icon" href="assets/favicon.png" type="image/png">
-
-    <link rel="stylesheet" href="./node_modules/material-design-icons/iconfont/material-icons.css">
-    <link rel="stylesheet" href="./node_modules/materialize-css/dist/css/materialize.min.css">
-
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-
-<body class="blue-grey darken-4 white-text">
-
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + Vue + TS</title>
+  </head>
+  <body>
     <div id="app"></div>
-
-    <script src="./node_modules/materialize-css/dist/js/materialize.min.js"></script>
-    <script src="./core/App.js"></script>
-
-    <script>
-        console.log("Aplicação iniciada!");
-        const app = new App();
-        app.init("app");
-        window.addEventListener('resize', () => {
-            app.resize();
-        });
-    </script>
-</body>
-
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

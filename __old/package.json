@@ -1,0 +1,31 @@
+{
+  "name": "voto-facil",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build": "electron-builder"
+  },
+  "keywords": [],
+  "author": "Mayco Rolbuche",
+  "license": "ISC",
+  "build": {
+    "appId": "com.votofacil.app",
+    "productName": "VotoFacil",
+    "win": {
+      "icon": "assets/icon.ico"
+    }
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "material-design-icons": "^3.0.1",
+    "materialize-css": "^1.0.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8"
+  }
+}

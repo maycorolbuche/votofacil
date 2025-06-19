@@ -1,0 +1,63 @@
+<div class="card-panel darken-3 z-depth-1 card-people" data-class="candidates.#key.color"
+    data-class-remove="#list_colors">
+    <div class="card-row">
+        <div class="card-col">
+            <div class="avatar darken-4 btn-floating cyan" data-class="candidates.#key.highlight ? pulse"
+                data-class-adic="candidates.#key.color" data-class-remove="#list_colors">
+                {{ candidates.#key.avatar }}
+            </div>
+        </div>
+        <div class="card-col" style="flex: 1;">
+            <div class="card-row card-name">
+                {{ candidates.#key.name }}&nbsp;
+            </div>
+            <div class="card-row">
+                <div class="card-col" style="flex: 1;">
+                    <div class="progress darken-1" style="margin: 0;" data-class="candidates.#key.color"
+                        data-class-remove="#list_colors">
+                        <div class="determinate darken-4" data-width="candidates.#key.percent"
+                            data-class="candidates.#key.color" data-class-remove="#list_colors"></div>
+                    </div>
+                </div>
+                <div class="card-col">
+                    {{ candidates.#key.percent }}%
+                </div>
+            </div>
+            <div class="card-row" style="justify-content: flex-end;">
+                <div class="card-col card-votes">
+                    {{ candidates.#key.votes_text }}
+                </div>
+                <a href="#" onclick="app.remove_candidate('#key');">APAGAR</a>
+                <a href="#" onclick="app.set_param('candidates.#key.color','red');">RED</a>
+                <a href="#" onclick="app.set_param('candidates.#key.color','green');">GREEN</a>
+                <a href="#" onclick="app.set_param('candidates.#key.color','blue');">BLUE</a>
+            </div>
+        </div>
+        <div class="card-col">
+            <a class="waves-effect waves-light modal-trigger" href="#modal_people_#key">
+                <i class="material-icons white-text">more_vert</i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!--| MODAL :: RENOMEAR SALA |-->
+<div id="modal_people_#key" class="modal blue-grey darken-3">
+    <div class="modal-content">
+        <h4 class="white-text">Opções do Candidato</h4>
+        <p class="white-text">Nome do Candidato:</p>
+        <div class="input-field col s6">
+            <component data="input" data-id="name_people_#key" data-data="candidates.#key.name"
+                data-onenter="document.getElementById('bt_save_people_#key').click()"></component>
+        </div>
+    </div>
+    <div class="modal-footer blue-grey darken-4">
+        <a href="#" class="modal-close btn waves-effect waves-light red darken-4" onclick="app.refresh();">
+            Cancelar
+        </a>
+        <a id="bt_save_people_#key" href="#" class="modal-close btn waves-effect waves-light teal darken-4"
+            onclick="app.set_param('candidates.#key.name', document.getElementById('name_people_#key').value);">
+            Salvar
+        </a>
+    </div>
+</div>
