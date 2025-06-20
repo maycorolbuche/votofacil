@@ -33,7 +33,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
-          VITE_BASE_URL: /
+          VITE_BASE_URL: /votofacil/
       - name: copy CNAME to dist (if exists)
         run: |
           if [ -f CNAME ]; then
