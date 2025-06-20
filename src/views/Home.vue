@@ -6,7 +6,11 @@
       <img src="@/assets/imgs/logo.svg" class="logo" />
 
       <BCard class="w-100">
-        <BFormInput v-model="room" placeholder="Código da Sala" />
+        <BFormInput
+          class="uppercase"
+          v-model="room"
+          placeholder="Código da Sala"
+        />
         <BButton class="w-100 my-2">Button</BButton>
         <div class="mt-2">Value: {{ room }}</div>
       </BCard>
