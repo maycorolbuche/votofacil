@@ -1,0 +1,19 @@
+input.form-control {
+    min-height: 2.375rem !important;
+    max-height: 48px !important;
+    line-height: 2.375rem !important;
+    text-align: center !important;
+    color: rgb(51, 51, 51) !important;
+    outline: none !important;
+    font-size: 1rem !important;
+    border-radius: 4px !important;
+    box-sizing: border-box !important;
+    font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica,
+        Arial, "Bai Jamjuree", sans-serif !important;
+    font-weight: bold !important;
+}
+
+input.form-control:focus {
+    border-color: #000 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25) !important;
+}
