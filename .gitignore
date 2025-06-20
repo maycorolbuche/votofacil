@@ -1,3 +1,12 @@
+# Design
+/design/**/*.png
+/design/**/*.jpg
+/design/**/*.jpeg
+/design/**/*.gif
+/design/**/*.svg
+/design/**/*.bmp
+/design/**/*.webp
+
 # Logs
 logs
 *.log
