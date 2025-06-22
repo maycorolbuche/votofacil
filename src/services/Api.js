@@ -1,3 +1,5 @@
+import Storage from "@/helpers/Storage.js";
+
 export default {
   get(route, options = null, callback = function () {}) {
     this.call("get", route, options, null, (resp, data) => {
@@ -29,7 +31,16 @@ export default {
 
     let url = `${this.url()}/${route}${params}`;
 
-    let headers = { "Content-Type": "application/json" };
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization:
+        "admin=" +
+        Storage.get("admin-token", "") +
+        ",user=" +
+        Storage.get("user-token", ""),
+    };
+
+    console.log(headers);
 
     if (body) {
       body = JSON.stringify(body || {});
@@ -41,7 +52,6 @@ export default {
       body,
     }).catch((err) => {
       callback(false, `Erro ao estabelecer conexão com o servidor!`);
-      DevTools.write("%c" + err, "color:red");
       return false;
     });
 

@@ -16,16 +16,28 @@
         />
         <BButton class="w-100 my-2" variant="dark">Acessar</BButton>
       </BCard>
+
       <div class="mt-2 text-white">
         <BLink
           v-show="!loading_create_room"
           class="home-link fw-bold"
           @click="create_room"
-          >Criar Sala</BLink
         >
+          Criar Sala
+        </BLink>
         <BSpinner v-show="loading_create_room" small class="mx-1" />
+        <span v-if="has_admin_room" class="px-3">|</span>
+        <router-link
+          v-if="has_admin_room"
+          class="home-link fw-bold"
+          :to="{ name: 'Room' }"
+        >
+          Voltar para a sala
+          <BBadge variant="light">{{ admin_room.code }}</BBadge>
+        </router-link>
       </div>
     </div>
+
     <small class="mb-2 text-white">
       <router-link class="home-link" :to="{ name: 'About' }">
         Termos e Privacidade
@@ -44,30 +56,51 @@
 
 <script>
 import Api from "@/services/Api.js";
+import Storage from "@/helpers/Storage.js";
 import Swal from "sweetalert2";
 
 export default {
   data: () => ({
     room: null,
     loading_create_room: false,
+    has_admin_room: false,
+    admin_room: [],
   }),
   methods: {
     async create_room() {
       this.loading_create_room = true;
       let self = this;
-      await Api.post("/rooms", null, function (status, data) {
+      await Api.post("/room", null, function (status, data) {
         self.loading_create_room = false;
 
-        console.log(status, data);
+        //console.log(status, data);
 
         if (!status) {
           Swal.fire({ title: data, icon: "error" });
           return;
         }
 
+        Storage.set("admin-token", data.token);
+
         self.$router.push({ name: "Room" });
       });
     },
+  },
+  async mounted() {
+    let admin_token = Storage.get("admin-token");
+    if (admin_token) {
+      let self = this;
+      await Api.get("/room", null, function (status, data) {
+        console.log(status, data);
+
+        if (!status) {
+          return;
+        }
+
+        self.has_admin_room = true;
+        self.admin_room = data;
+      });
+    }
   },
 };
 </script>
