@@ -19,5 +19,7 @@ input.form-control:focus {
 }
 
 input.form-control::placeholder {
+    letter-spacing: 0;
     text-transform: none;
+    color: #B2B2B2
 }
