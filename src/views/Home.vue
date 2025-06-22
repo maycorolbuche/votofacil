@@ -17,24 +17,58 @@
         <BButton class="w-100 my-2" variant="dark">Acessar</BButton>
       </BCard>
       <div class="mt-2 text-white">
-        <router-link class="home-link fw-bold" to="/te">Criar Sala</router-link>
+        <BLink
+          v-show="!loading_create_room"
+          class="home-link fw-bold"
+          @click="create_room"
+          >Criar Sala</BLink
+        >
+        <BSpinner v-show="loading_create_room" small class="mx-1" />
       </div>
     </div>
     <small class="mb-2 text-white">
-      <router-link class="home-link" to="/te">Termos e Privacidade</router-link>
+      <router-link class="home-link" :to="{ name: 'About' }">
+        Termos e Privacidade
+      </router-link>
       <span class="px-3">|</span>
-      <router-link class="home-link" to="/te">Ajuda</router-link>
+      <router-link class="home-link" :to="{ name: 'About' }">
+        Ajuda
+      </router-link>
       <span class="px-3">|</span>
-      <router-link class="home-link" to="/te">Contato</router-link>
+      <router-link class="home-link" :to="{ name: 'About' }">
+        Contato
+      </router-link>
     </small>
   </div>
 </template>
 
 <script>
+import Api from "@/services/Api.js";
+import Swal from "sweetalert2";
+
 export default {
   data: () => ({
     room: null,
+    loading_create_room: false,
   }),
+  methods: {
+    async create_room() {
+      this.loading_create_room = true;
+      let self = this;
+      await Api.post("/rooms", null, function (status, data) {
+        self.loading_create_room = false;
+
+        console.log(status, data);
+
+        if (!status) {
+          Swal.fire({ title: data, icon: "error" });
+          return;
+        }
+
+        self.$router.push({ name: "Room" });
+      });
+    },
+  },
 };
 </script>
 
