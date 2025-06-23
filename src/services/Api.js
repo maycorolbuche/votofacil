@@ -13,6 +13,12 @@ export default {
     });
   },
 
+  delete(route, callback = function () {}) {
+    this.call("delete", route, null, null, (resp, data) => {
+      callback(resp, data);
+    });
+  },
+
   async call(
     method,
     route,

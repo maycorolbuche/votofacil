@@ -9,7 +9,13 @@
       <img src="@/assets/imgs/logo.svg" class="logo" />
 
       <BCard class="w-100">
-        <div v-if="user_room?.room?.code">
+        <div
+          v-if="loading_has_user_room"
+          class="d-flex justify-content-center align-items-center"
+        >
+          <BSpinner class="mx-1" />
+        </div>
+        <div v-else-if="user_room?.room?.code">
           <input
             class="form-control room-input uppercase"
             disabled
@@ -43,12 +49,20 @@
           </BButton>
         </div>
 
-        <BAlert v-model="has_error" variant="danger" dismissible>
+        <BAlert
+          v-model="has_error"
+          variant="danger"
+          class="w-100 mt-2"
+          dismissible
+        >
           {{ error }}
         </BAlert>
       </BCard>
 
-      <div class="mt-2 text-white">
+      <div v-if="loading_has_admin_room" class="mt-2 text-white">
+        <BSpinner small class="mx-1" />
+      </div>
+      <div v-else class="mt-2 text-white">
         <BLink
           v-if="!loading_create_room"
           class="home-link fw-bold"
@@ -82,6 +96,7 @@
         Contato
       </router-link>
     </small>
+    {{ loading_has_user_room }}|{{ loading_has_admin_room }}
   </div>
 </template>
 
@@ -96,6 +111,8 @@ export default {
     error: null,
     loading_access_room: false,
     loading_create_room: false,
+    loading_has_admin_room: false,
+    loading_has_user_room: false,
     has_admin_room: false,
     has_user_room: false,
     admin_room: [],
@@ -163,14 +180,43 @@ export default {
       );
     },
     async exit_room() {
-      alert("sair");
+      this.error = false;
+      Swal.fire({
+        title: "Deseja realmente sair desta sala?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.loading_has_user_room = true;
+
+          let self = this;
+          Api.delete("/device", function (status, data) {
+            self.loading_has_user_room = false;
+
+            console.log(status, data);
+
+            if (!status) {
+              self.error = data;
+              return;
+            }
+
+            Storage.remove("user-token");
+            self.has_user_room = false;
+            self.user_room = [];
+          });
+        }
+      });
     },
   },
   async mounted() {
     let admin_token = Storage.get("admin-token");
     if (admin_token) {
       let self = this;
+      this.loading_has_admin_room = true;
       await Api.get("/room", null, function (status, data) {
+        self.loading_has_admin_room = false;
         console.log("/room", status, data);
 
         if (!status) {
@@ -185,7 +231,9 @@ export default {
     let user_token = Storage.get("user-token");
     if (user_token) {
       let self = this;
+      this.loading_has_user_room = true;
       await Api.get("/device", null, function (status, data) {
+        self.loading_has_user_room = false;
         console.log("/device", status, data);
 
         if (!status) {
