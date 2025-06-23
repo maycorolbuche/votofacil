@@ -3,21 +3,21 @@ import Storage from "@/helpers/Storage.js";
 export default {
   get(route, options = null, callback = function () {}) {
     this.call("get", route, options, null, (resp, data) => {
-      console.log("GET", resp, data);
+      //console.log("GET", resp, data);
       callback(resp, data);
     });
   },
 
   post(route, body = null, callback = function () {}) {
     this.call("post", route, null, body, (resp, data) => {
-      console.log("POST", resp, data);
+      //console.log("POST", resp, data);
       callback(resp, data);
     });
   },
 
   delete(route, callback = function () {}) {
     this.call("delete", route, null, null, (resp, data) => {
-      console.log("DELETE", resp, data);
+      //console.log("DELETE", resp, data);
       callback(resp, data);
     });
   },
