@@ -18,6 +18,7 @@ Object.entries(components).forEach(([componentName, component]) => {
 import "./assets/styles/main.css";
 import "./assets/styles/input.css";
 import "./assets/styles/button.css";
+import "./assets/styles/logo.css";
 import "./assets/styles/link.css";
 
 app.use(router);

@@ -9,3 +9,20 @@ body {
 .uppercase {
     text-transform: uppercase;
 }
+
+
+.page-container {
+    width: 400px;
+}
+
+@media (max-width: 410px) {
+    .page-container {
+        width: calc(100% - 50px);
+    }
+}
+
+@media (max-width: 300px) {
+    .page-container {
+        width: 100%;
+    }
+}

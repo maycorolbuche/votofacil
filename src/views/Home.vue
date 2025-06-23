@@ -6,7 +6,7 @@
       class="page-container d-flex flex-column align-items-center justify-content-center"
       style="flex: auto"
     >
-      <img src="@/assets/imgs/logo.svg" class="logo" />
+      <img src="@/assets/imgs/logo.svg" class="main-logo" />
 
       <BCard class="w-100">
         <div
@@ -15,11 +15,11 @@
         >
           <BSpinner class="mx-1" />
         </div>
-        <div v-else-if="user_room?.room?.code">
+        <div v-else-if="user_room?.code">
           <input
             class="form-control room-input uppercase"
             disabled
-            :value="user_room?.room?.code"
+            :value="user_room?.code"
           />
           <BButton
             class="w-100 my-2"
@@ -65,7 +65,7 @@
       <div v-else class="mt-2 text-white">
         <BLink
           v-if="!loading_create_room"
-          class="home-link fw-bold"
+          class="link-white fw-bold"
           @click="create_room"
         >
           Criar sala
@@ -74,7 +74,7 @@
         <span v-if="has_admin_room" class="px-3">|</span>
         <router-link
           v-if="has_admin_room"
-          class="home-link fw-bold"
+          class="link-white fw-bold"
           :to="{ name: 'Room' }"
         >
           Voltar para a sala
@@ -84,19 +84,18 @@
     </div>
 
     <small class="mb-2 text-white">
-      <router-link class="home-link" :to="{ name: 'About' }">
+      <router-link class="link-white" :to="{ name: 'About' }">
         Termos e Privacidade
       </router-link>
       <span class="px-3">|</span>
-      <router-link class="home-link" :to="{ name: 'About' }">
+      <router-link class="link-white" :to="{ name: 'About' }">
         Ajuda
       </router-link>
       <span class="px-3">|</span>
-      <router-link class="home-link" :to="{ name: 'About' }">
+      <router-link class="link-white" :to="{ name: 'About' }">
         Contato
       </router-link>
     </small>
-    {{ loading_has_user_room }}|{{ loading_has_admin_room }}
   </div>
 </template>
 
@@ -134,10 +133,8 @@ export default {
     async create_room() {
       this.loading_create_room = true;
       let self = this;
-      await Api.post("/room", null, function (status, data) {
+      await Api.post("/admin/room", null, function (status, data) {
         self.loading_create_room = false;
-
-        //console.log(status, data);
 
         if (!status) {
           Swal.fire({ title: data, icon: "error" });
@@ -161,12 +158,10 @@ export default {
       this.loading_access_room = true;
       let self = this;
       await Api.post(
-        "/device",
+        "/user/device",
         { room_code: this.room_code },
         function (status, data) {
           self.loading_access_room = false;
-
-          console.log(status, data);
 
           if (!status) {
             self.error = data;
@@ -192,10 +187,8 @@ export default {
           this.loading_has_user_room = true;
 
           let self = this;
-          Api.delete("/device", function (status, data) {
+          Api.delete("/user/device", function (status, data) {
             self.loading_has_user_room = false;
-
-            console.log(status, data);
 
             if (!status) {
               self.error = data;
@@ -215,9 +208,8 @@ export default {
     if (admin_token) {
       let self = this;
       this.loading_has_admin_room = true;
-      await Api.get("/room", null, function (status, data) {
+      await Api.get("/admin/room", null, function (status, data) {
         self.loading_has_admin_room = false;
-        console.log("/room", status, data);
 
         if (!status) {
           return;
@@ -232,9 +224,8 @@ export default {
     if (user_token) {
       let self = this;
       this.loading_has_user_room = true;
-      await Api.get("/device", null, function (status, data) {
+      await Api.get("/user/device", null, function (status, data) {
         self.loading_has_user_room = false;
-        console.log("/device", status, data);
 
         if (!status) {
           return;
@@ -249,47 +240,7 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  max-width: 200px;
-  padding: 1.5em;
-  padding-top: 0;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #fff);
-}
-
-.page-container {
-  width: 400px;
-}
-@media (max-width: 410px) {
-  .page-container {
-    width: calc(100% - 50px);
-  }
-
-  .logo {
-    width: 75%;
-    max-width: 100%;
-    padding: 1em;
-  }
-}
-
-@media (max-width: 300px) {
-  .page-container {
-    width: 100%;
-  }
-
-  .logo {
-    width: 90%;
-  }
-}
-
 .room-input {
   letter-spacing: 0.3em;
-}
-
-.home-link {
-  color: #fff;
 }
 </style>
