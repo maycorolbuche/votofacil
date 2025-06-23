@@ -9,23 +9,54 @@
       <img src="@/assets/imgs/logo.svg" class="logo" />
 
       <BCard class="w-100">
-        <BFormInput
-          class="room-input uppercase"
-          v-model="room"
-          placeholder="Código da Sala"
-        />
-        <BButton class="w-100 my-2" variant="dark">Acessar</BButton>
+        <div v-if="user_room?.room?.code">
+          <input
+            class="form-control room-input uppercase"
+            disabled
+            :value="user_room?.room?.code"
+          />
+          <BButton
+            class="w-100 my-2"
+            variant="dark"
+            @click="$router.push({ name: 'Voter' })"
+          >
+            Voltar para esta sala
+          </BButton>
+          <BButton class="w-100" variant="danger" @click="exit_room">
+            Sair desta sala
+          </BButton>
+        </div>
+        <div v-else>
+          <BFormInput
+            class="room-input uppercase"
+            v-model="room_code"
+            placeholder="Código da sala"
+          />
+          <BButton
+            class="w-100 mt-2"
+            variant="dark"
+            :disabled="loading_access_room"
+            @click="access_room"
+          >
+            <BSpinner v-if="loading_access_room" small class="mx-1" />
+            <span v-else>Acessar</span>
+          </BButton>
+        </div>
+
+        <BAlert v-model="has_error" variant="danger" dismissible>
+          {{ error }}
+        </BAlert>
       </BCard>
 
       <div class="mt-2 text-white">
         <BLink
-          v-show="!loading_create_room"
+          v-if="!loading_create_room"
           class="home-link fw-bold"
           @click="create_room"
         >
-          Criar Sala
+          Criar sala
         </BLink>
-        <BSpinner v-show="loading_create_room" small class="mx-1" />
+        <BSpinner v-else small class="mx-1" />
         <span v-if="has_admin_room" class="px-3">|</span>
         <router-link
           v-if="has_admin_room"
@@ -61,11 +92,27 @@ import Swal from "sweetalert2";
 
 export default {
   data: () => ({
-    room: null,
+    room_code: null,
+    error: null,
+    loading_access_room: false,
     loading_create_room: false,
     has_admin_room: false,
+    has_user_room: false,
     admin_room: [],
+    user_room: [],
   }),
+  computed: {
+    has_error: {
+      get() {
+        return !!this.error;
+      },
+      set(value) {
+        if (!value) {
+          this.error = null;
+        }
+      },
+    },
+  },
   methods: {
     async create_room() {
       this.loading_create_room = true;
@@ -85,13 +132,46 @@ export default {
         self.$router.push({ name: "Room" });
       });
     },
+    async access_room() {
+      this.loading_access_room = false;
+      this.error = null;
+
+      if (!this.room_code) {
+        this.error = "Informe o código da sala!";
+        return;
+      }
+
+      this.loading_access_room = true;
+      let self = this;
+      await Api.post(
+        "/device",
+        { room_code: this.room_code },
+        function (status, data) {
+          self.loading_access_room = false;
+
+          console.log(status, data);
+
+          if (!status) {
+            self.error = data;
+            return;
+          }
+
+          Storage.set("user-token", data.token);
+
+          self.$router.push({ name: "Voter" });
+        }
+      );
+    },
+    async exit_room() {
+      alert("sair");
+    },
   },
   async mounted() {
     let admin_token = Storage.get("admin-token");
     if (admin_token) {
       let self = this;
       await Api.get("/room", null, function (status, data) {
-        console.log(status, data);
+        console.log("/room", status, data);
 
         if (!status) {
           return;
@@ -99,6 +179,21 @@ export default {
 
         self.has_admin_room = true;
         self.admin_room = data;
+      });
+    }
+
+    let user_token = Storage.get("user-token");
+    if (user_token) {
+      let self = this;
+      await Api.get("/device", null, function (status, data) {
+        console.log("/device", status, data);
+
+        if (!status) {
+          return;
+        }
+
+        self.has_user_room = true;
+        self.user_room = data;
       });
     }
   },

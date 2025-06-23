@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
 import About from "@/views/About.vue";
 import Room from "@/views/admin/Room.vue";
+import Voter from "@/views/user/Voter.vue";
+
 const routes = [
   {
     path: "/",
@@ -19,6 +21,13 @@ const routes = [
     path: "/room",
     name: "Room",
     component: Room,
+  },
+
+  //Voter routes
+  {
+    path: "/voter",
+    name: "Voter",
+    component: Voter,
   },
 ];
 const router = createRouter({
