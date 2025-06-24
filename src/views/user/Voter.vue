@@ -36,6 +36,7 @@ export default {
     error: null,
     timer: null,
     lock: false,
+    count_error: 0,
   }),
   methods: {
     async load_data() {
@@ -50,9 +51,15 @@ export default {
 
         if (!status) {
           self.error = data;
+          self.count_error++;
+
+          if (self.count_error >= 10) {
+            self.$router.push({ name: "Home" });
+          }
           return;
         }
 
+        self.count_error = 0;
         self.error = null;
         self.data = data;
       });
