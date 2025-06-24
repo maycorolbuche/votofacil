@@ -16,6 +16,12 @@
       ERRO: {{ error }}
     </div>
   </div>
+  <div
+    v-else
+    class="vh-100 d-flex flex-column align-items-center justify-content-center"
+  >
+    <BSpinner variant="light" style="width: 3rem; height: 3rem" class="me-2" />
+  </div>
 </template>
 
 <script>

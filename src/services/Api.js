@@ -3,21 +3,27 @@ import Storage from "@/helpers/Storage.js";
 export default {
   get(route, options = null, callback = function () {}) {
     this.call("get", route, options, null, (resp, data) => {
-      //console.log("GET", resp, data);
+      if (this.is_local()) {
+        console.log("GET", resp, data);
+      }
       callback(resp, data);
     });
   },
 
   post(route, body = null, callback = function () {}) {
     this.call("post", route, null, body, (resp, data) => {
-      //console.log("POST", resp, data);
+      if (this.is_local()) {
+        console.log("POST", resp, data);
+      }
       callback(resp, data);
     });
   },
 
   delete(route, callback = function () {}) {
     this.call("delete", route, null, null, (resp, data) => {
-      //console.log("DELETE", resp, data);
+      if (this.is_local()) {
+        console.log("DELETE", resp, data);
+      }
       callback(resp, data);
     });
   },
@@ -79,7 +85,7 @@ export default {
   },
 
   base_url() {
-    if (window && window.location && window.location.hostname === "localhost") {
+    if (this.is_local()) {
       return "http://localhost:4002";
     }
     return "https://votofacil-api.maycorolbuche.com.br/";
@@ -87,6 +93,12 @@ export default {
 
   url() {
     return `${this.base_url()}`;
+  },
+
+  is_local() {
+    return (
+      window && window.location && window.location.hostname === "localhost"
+    );
   },
 
   data_to_url(data) {

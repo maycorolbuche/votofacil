@@ -1,8 +1,8 @@
-a {
+a:not(.dropdown-item) {
     text-decoration: none;
 }
 
-a:hover {
+a:not(.dropdown-item):hover {
     text-decoration: underline;
 }
 

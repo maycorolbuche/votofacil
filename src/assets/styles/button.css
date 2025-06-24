@@ -1,4 +1,4 @@
-button.btn,
+button.btn:not(.dropdown-toggle),
 button.swal2-styled {
     border: 0px;
     cursor: pointer;
