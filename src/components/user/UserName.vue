@@ -10,8 +10,13 @@
 
       <BCard class="w-100">
         <label>Digite seu nome:</label>
-        <BFormInput placeholder="Nome" />
-        <BButton class="w-100 mt-2" variant="dark" :disabled="loading">
+        <BFormInput placeholder="Nome" v-model="name" />
+        <BButton
+          class="w-100 mt-2"
+          variant="dark"
+          :disabled="loading"
+          @click="add_user"
+        >
           <BSpinner v-if="loading" small class="mx-1" />
           <span v-else>Confirmar</span>
         </BButton>
@@ -35,11 +40,42 @@
 </template>
 
 <script>
+import Api from "@/services/Api.js";
+
 export default {
   data: () => ({
     error: null,
     loading: false,
+    name: "",
   }),
+  methods: {
+    async add_user() {
+      this.loading = false;
+      this.error = null;
+
+      if (!this.name) {
+        this.error = "Digite seu nome!";
+        return;
+      }
+
+      this.loading = true;
+      let self = this;
+      await Api.post(
+        "/user/user",
+        { name: this.name },
+        function (status, data) {
+          self.loading = false;
+
+          if (!status) {
+            self.error = data;
+            return;
+          }
+
+          self.$emit("save");
+        }
+      );
+    },
+  },
   computed: {
     has_error: {
       get() {

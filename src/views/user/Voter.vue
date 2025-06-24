@@ -1,7 +1,9 @@
 <template>
   <div v-if="data || error">
     <ErrorMessage v-if="error" :message="error" />
-    <UserName v-else-if="data.status == 'no-users'" />
+    <UserName v-else-if="data.status == 'no-users'" @save="load_data()" />
+    <Waiting v-else-if="data.status == 'pending'" />
+
     <div
       v-else
       class="page-container d-flex flex-column align-items-center justify-content-center"
@@ -21,11 +23,13 @@ import Api from "@/services/Api.js";
 
 import ErrorMessage from "@/components/ErrorMessage.vue";
 import UserName from "@/components/user/UserName.vue";
+import Waiting from "@/components/user/Waiting.vue";
 
 export default {
   components: {
     ErrorMessage,
     UserName,
+    Waiting,
   },
   data: () => ({
     data: null,
