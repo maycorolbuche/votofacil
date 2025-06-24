@@ -142,6 +142,7 @@ export default {
         }
 
         Storage.set("admin-token", data.token);
+        Storage.set("admin-token-ts", Date.now());
 
         self.$router.push({ name: "Room" });
       });
@@ -169,6 +170,7 @@ export default {
           }
 
           Storage.set("user-token", data.token);
+          Storage.set("user-token-ts", Date.now());
 
           self.$router.push({ name: "Voter" });
         }
@@ -212,6 +214,13 @@ export default {
         self.loading_has_admin_room = false;
 
         if (!status) {
+          let ts = Storage.get("admin-token-ts");
+          let cts = Date.now();
+          console.log(ts, cts, cts - ts);
+          if (ts && cts - ts > 24 * 60 * 60 * 1000) {
+            Storage.remove("admin-token");
+            Storage.remove("admin-token-ts");
+          }
           return;
         }
 
@@ -228,6 +237,13 @@ export default {
         self.loading_has_user_room = false;
 
         if (!status) {
+          let ts = Storage.get("user-token-ts");
+          let cts = Date.now();
+          console.log(ts, cts, cts - ts);
+          if (ts && cts - ts > 24 * 60 * 60 * 1000) {
+            Storage.remove("user-token");
+            Storage.remove("user-token-ts");
+          }
           return;
         }
 

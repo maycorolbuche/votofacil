@@ -20,6 +20,7 @@
 
 <script>
 import Api from "@/services/Api.js";
+import Storage from "@/helpers/Storage.js";
 
 import ErrorMessage from "@/components/ErrorMessage.vue";
 import UserName from "@/components/user/UserName.vue";
@@ -58,6 +59,8 @@ export default {
           }
           return;
         }
+
+        Storage.set("user-token-ts", Date.now());
 
         self.count_error = 0;
         self.error = null;
