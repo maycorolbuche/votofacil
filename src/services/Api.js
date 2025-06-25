@@ -2,7 +2,7 @@ import Storage from "@/helpers/Storage.js";
 
 export default {
   get(route, options = null, callback = function () {}) {
-    this.call("get", route, options, null, (resp, data) => {
+    this.call("GET", route, options, null, (resp, data) => {
       if (this.is_local()) {
         console.log("GET", resp, data);
       }
@@ -11,7 +11,7 @@ export default {
   },
 
   post(route, body = null, callback = function () {}) {
-    this.call("post", route, null, body, (resp, data) => {
+    this.call("POST", route, null, body, (resp, data) => {
       if (this.is_local()) {
         console.log("POST", resp, data);
       }
@@ -19,8 +19,17 @@ export default {
     });
   },
 
+  patch(route, body = null, callback = function () {}) {
+    this.call("PATCH", route, null, body, (resp, data) => {
+      if (this.is_local()) {
+        console.log("PATCH", resp, data);
+      }
+      callback(resp, data);
+    });
+  },
+
   delete(route, callback = function () {}) {
-    this.call("delete", route, null, null, (resp, data) => {
+    this.call("DELETE", route, null, null, (resp, data) => {
       if (this.is_local()) {
         console.log("DELETE", resp, data);
       }
