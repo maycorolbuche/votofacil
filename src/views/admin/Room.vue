@@ -9,34 +9,7 @@
     >
       <BCard no-body class="m-3">
         <BTabs card>
-          <BTab title="Candidatos" active>
-            <BCardText> sdfds </BCardText>
-            <BCardText class="overflow-auto overflow">
-              {{ data }}
-              <p></p>
-              <hr />
-              Tab contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />
-              Tab contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />
-              Tab contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />
-              Tab contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />Tab contents 1<br />Tab contents 1<br />Tab
-              contents 1<br />
-            </BCardText>
-          </BTab>
+          <TabCandidates :data="data" @save="load_data" />
           <BTab title="Eleitores">
             <BCardText>Tab contents 2</BCardText>
           </BTab>
@@ -67,12 +40,13 @@ import Storage from "@/helpers/Storage.js";
 import Header from "@/components/admin/Header.vue";
 import Footer from "@/components/admin/Footer.vue";
 import ErrorMessage from "@/components/ErrorMessage.vue";
+import TabCandidates from "@/components/admin/TabCandidates.vue";
 
 export default {
   components: {
     Header,
     Footer,
-
+    TabCandidates,
     ErrorMessage,
   },
   data: () => ({

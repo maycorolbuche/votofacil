@@ -10,7 +10,11 @@
 
       <BCard class="w-100">
         <label>Digite seu nome:</label>
-        <BFormInput placeholder="Nome" v-model="name" />
+        <BFormInput
+          placeholder="Nome"
+          v-model="name"
+          :state="has_error ? false : null"
+        />
         <BButton
           class="w-100 mt-2"
           variant="dark"

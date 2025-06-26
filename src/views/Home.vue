@@ -37,6 +37,7 @@
             class="room-input uppercase"
             v-model="room_code"
             placeholder="Código da sala"
+            :state="has_error ? false : null"
           />
           <BButton
             class="w-100 mt-2"

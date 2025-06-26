@@ -69,6 +69,7 @@
 
 <script>
 import Api from "@/services/Api.js";
+import Swal from "sweetalert2";
 
 export default {
   props: {
@@ -86,7 +87,6 @@ export default {
       this.modal_room_name.name = this.data.room.name;
     },
     async save_room_name() {
-      console.log("SALVO");
       this.modal_room_name.loading = true;
       let self = this;
       await Api.patch(
@@ -97,7 +97,10 @@ export default {
           self.data.room.name = self.modal_room_name.name;
 
           if (!status) {
-            console.log("ERRO", data);
+            Swal.fire({
+              title: data,
+              icon: "error",
+            });
           }
           self.$emit("save");
         }
