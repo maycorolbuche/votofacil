@@ -28,8 +28,8 @@ export default {
     });
   },
 
-  delete(route, callback = function () {}) {
-    this.call("DELETE", route, null, null, (resp, data) => {
+  delete(route, body = null, callback = function () {}) {
+    this.call("DELETE", route, null, body, (resp, data) => {
       if (this.is_local()) {
         console.log("DELETE", resp, data);
       }

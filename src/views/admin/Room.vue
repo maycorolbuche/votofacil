@@ -15,6 +15,34 @@
           </BTab>
           <BTab title="Projetar">
             <BCardText>Tab contents 2</BCardText>
+            <BCardText class="overflow overflow-auto">
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+              Tab contents 2<br />
+            </BCardText>
           </BTab>
           <BTab title="Configurações">
             <BCardText>Tab contents 2</BCardText>
@@ -113,7 +141,9 @@ export default {
   min-height: 0;
 }
 
-.content-container > .card {
+.content-container > .card,
+.content-container > .card .tabs,
+.content-container > .card .tabs .tab-content {
   flex: 1;
 }
 

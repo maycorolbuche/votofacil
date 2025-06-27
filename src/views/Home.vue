@@ -190,7 +190,7 @@ export default {
           this.loading_has_user_room = true;
 
           let self = this;
-          Api.delete("/user/device", function (status, data) {
+          Api.delete("/user/device", null, function (status, data) {
             self.loading_has_user_room = false;
 
             if (!status) {
