@@ -203,7 +203,6 @@ export default {
         { name: this.candidate_name_new },
         function (status, data) {
           self.candidate_name_new_loading = false;
-          console.log(status, data);
 
           if (!status) {
             self.candidate_name_new_error = data;
