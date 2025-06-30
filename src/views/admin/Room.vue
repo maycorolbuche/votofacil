@@ -44,9 +44,7 @@
               Tab contents 2<br />
             </BCardText>
           </BTab>
-          <BTab title="Configurações">
-            <BCardText>Tab contents 2</BCardText>
-          </BTab>
+          <TabConfigs :data="data" @save="load_data" />
         </BTabs>
       </BCard>
     </div>
@@ -69,12 +67,14 @@ import Header from "@/components/admin/Header.vue";
 import Footer from "@/components/admin/Footer.vue";
 import ErrorMessage from "@/components/ErrorMessage.vue";
 import TabCandidates from "@/components/admin/TabCandidates.vue";
+import TabConfigs from "@/components/admin/TabConfigs.vue";
 
 export default {
   components: {
     Header,
     Footer,
     TabCandidates,
+    TabConfigs,
     ErrorMessage,
   },
   data: () => ({

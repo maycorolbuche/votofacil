@@ -95,17 +95,46 @@
         </template>
 
         <template #cell(total_votes)="row">
-          <BBadge
-            v-if="row.item.admin_votes && row.item.user_votes"
-            variant="muted"
-            class="text-muted"
+          <BPopover
+            v-if="
+              row.item.admin_votes &&
+              row.item.admin_votes == row.item.total_votes
+            "
           >
-            {{ row.item.user_votes }}
-          </BBadge>
-          <BBadge v-if="row.item.admin_votes" variant="warning">
-            +{{ row.item.admin_votes }}
-          </BBadge>
-          {{ row.item.total_votes }}
+            <template #target>
+              <BBadge variant="warning">
+                {{ row.item.total_votes }}
+              </BBadge>
+            </template>
+            Votos do administrador: <b>{{ row.item.admin_votes }}</b>
+          </BPopover>
+          <BPopover
+            v-else-if="
+              row.item.user_votes && row.item.user_votes == row.item.total_votes
+            "
+          >
+            <template #target>
+              <BBadge variant="info">
+                {{ row.item.total_votes }}
+              </BBadge>
+            </template>
+            Votos dos usuários: <b>{{ row.item.user_votes }}</b>
+          </BPopover>
+          <BPopover v-else-if="row.item.user_votes && row.item.admin_votes">
+            <template #target>
+              <small>
+                <span class="text-warning">+{{ row.item.admin_votes }}</span>
+                &nbsp;
+                <span class="text-info">+{{ row.item.user_votes }}</span>
+                &nbsp;
+              </small>
+              <BBadge variant="danger">
+                {{ row.item.total_votes }}
+              </BBadge>
+            </template>
+            Votos do administrador: <b>{{ row.item.admin_votes }}</b>
+            <br />Votos dos usuários: <b>{{ row.item.user_votes }}</b>
+          </BPopover>
         </template>
 
         <template #cell(options)="row">
