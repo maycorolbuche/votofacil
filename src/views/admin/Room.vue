@@ -7,7 +7,7 @@
       class="flex-grow-1 d-flex flex-column content-container"
       style="min-height: 0"
     >
-      <BCard no-body class="m-3">
+      <BCard no-body class="mx-2">
         <BTabs card>
           <TabCandidates :data="data" @save="load_data" />
           <BTab title="Eleitores">

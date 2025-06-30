@@ -1,10 +1,10 @@
 <template>
-  <BTab title="Candidatos" active>
-    <BCardText>
+  <BTab title="Candidatos" class="py-0">
+    <BCardText class="m-0">
       <div class="d-flex align-items-center">
         <div style="flex: 1">
           <BFormInput
-            placeholder="Nome do candidato"
+            placeholder="Nome do(a) candidato(a)"
             v-model="candidate_name_new"
             @keyup.enter="add_candidate()"
             :state="candidate_name_new_error ? false : null"
@@ -46,9 +46,16 @@
         :items="candidates"
         :fields="[
           {
+            key: 'position',
+            label: 'Colocação',
+            sortable: true,
+            class: 'text-end',
+          },
+          {
             key: 'sequence',
             label: 'Nº',
             sortable: true,
+            class: 'text-end',
           },
           {
             key: 'name',
@@ -56,11 +63,44 @@
             sortable: true,
           },
           {
+            key: 'total_votes',
+            label: 'Votos',
+            sortable: true,
+            class: 'text-end',
+          },
+          {
             key: 'options',
             label: '',
           },
         ]"
       >
+        <template #cell(position)="row">
+          <div
+            class="d-flex align-items-center justify-content-end"
+            style="margin-top: -6px; margin-bottom: -6px; height: 38px"
+          >
+            <BAvatar
+              variant="primary"
+              size="34px"
+              :text="row.item.position + 'º'"
+            />
+          </div>
+        </template>
+
+        <template #cell(total_votes)="row">
+          <BBadge
+            v-if="row.item.admin_votes && row.item.user_votes"
+            variant="muted"
+            class="text-muted"
+          >
+            {{ row.item.user_votes }}
+          </BBadge>
+          <BBadge v-if="row.item.admin_votes" variant="warning">
+            +{{ row.item.admin_votes }}
+          </BBadge>
+          {{ row.item.total_votes }}
+        </template>
+
         <template #cell(options)="row">
           <div
             class="text-end"
@@ -112,6 +152,33 @@
       </BTable>
     </div>
 
+    <BCardText class="m-0">
+      <div class="d-flex align-items-center">
+        <div style="flex: 1"></div>
+        <div class="ps-2">
+          <BButton
+            :disabled="candidate_deleting_all_loading"
+            class="w-100 my-2"
+            variant="danger"
+            @click="delete_all_candidate()"
+          >
+            <svg
+              v-if="!candidate_deleting_all_loading"
+              style="width: 20px; fill: white"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
+              />
+            </svg>
+            <BSpinner v-else small class="mx-1" />
+            Apagar todos
+          </BButton>
+        </div>
+      </div>
+    </BCardText>
+
     <BModal
       v-model="candidate_update_modal"
       title="Alterar candidato"
@@ -124,6 +191,9 @@
           placeholder="Digite o nome"
           v-model="candidate_update_data.name"
         />
+      </BFormGroup>
+      <BFormGroup label="Qtd. Votos">
+        <BFormInput v-model="candidate_update_data.admin_votes" type="number" />
       </BFormGroup>
     </BModal>
   </BTab>
@@ -146,6 +216,7 @@ export default {
     candidate_update_modal: false,
     candidate_updating: [],
 
+    candidate_deleting_all_loading: false,
     candidate_deleting: [],
   }),
   computed: {
@@ -192,7 +263,7 @@ export default {
       this.candidate_name_new_error = null;
 
       if (!this.candidate_name_new) {
-        this.candidate_name_new_error = "Informe o nome da pessoa!";
+        this.candidate_name_new_error = "Informe o nome do(a) candidato(a)!";
         return;
       }
 
@@ -226,10 +297,7 @@ export default {
       let self = this;
       await Api.patch(
         "/admin/candidate",
-        {
-          id: this.candidate_update_data.id,
-          name: this.candidate_update_data.name,
-        },
+        { ...this.candidate_update_data },
         function (status, data) {
           if (!status) {
             Swal.fire({ title: data, icon: "error" });
@@ -246,7 +314,7 @@ export default {
     },
     async delete_candidate(id) {
       Swal.fire({
-        title: "Deseja realmente apagar esta pessoa?",
+        title: "Deseja realmente apagar este(a) candidato(a?",
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Sim",
@@ -266,6 +334,32 @@ export default {
               return;
             }
 
+            self.$emit("save");
+          });
+        }
+      });
+    },
+    async delete_all_candidate() {
+      Swal.fire({
+        title: "Deseja realmente apagar todos os candidatos?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.candidate_deleting_all_loading = true;
+
+          let self = this;
+          Api.delete("/admin/candidate", null, function (status, data) {
+            self.candidate_deleting_all_loading = false;
+
+            if (!status) {
+              Swal.fire({ title: data, icon: "error" });
+              return;
+            }
+
+            self.data.room.candidates = [];
             self.$emit("save");
           });
         }

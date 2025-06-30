@@ -2,7 +2,7 @@
   <div>
     <BCard
       no-body
-      class="m-3 p-2 d-flex align-items-center flex-nowrap flex-row"
+      class="m-2 p-2 d-flex align-items-center flex-nowrap flex-row"
     >
       <div class="overflow-auto" style="flex: auto">
         <BCardText class="text-truncate m-0 small">Código da Sala:</BCardText>

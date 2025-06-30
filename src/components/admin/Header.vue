@@ -2,7 +2,7 @@
   <div>
     <BCard
       no-body
-      class="m-3 p-2 d-flex align-items-center flex-nowrap flex-row"
+      class="m-2 p-2 d-flex align-items-center flex-nowrap flex-row"
     >
       <div class="mx-2">
         <BSpinner small v-if="this.modal_room_name.loading" />
