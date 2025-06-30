@@ -80,7 +80,14 @@
             style="margin-top: -6px; margin-bottom: -6px; height: 38px"
           >
             <BAvatar
-              variant="primary"
+              :style="
+                'background-color: ' +
+                position_color(row.item.position)[0] +
+                ' !important;' +
+                'color: ' +
+                position_color(row.item.position)[1] +
+                ' !important'
+              "
               size="34px"
               :text="row.item.position + 'º'"
             />
@@ -201,6 +208,7 @@
 
 <script>
 import Api from "@/services/Api.js";
+import Position from "@/helpers/Position.js";
 import Swal from "sweetalert2";
 
 export default {
@@ -314,7 +322,7 @@ export default {
     },
     async delete_candidate(id) {
       Swal.fire({
-        title: "Deseja realmente apagar este(a) candidato(a?",
+        title: "Deseja realmente apagar este(a) candidato(a)?",
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Sim",
@@ -364,6 +372,9 @@ export default {
           });
         }
       });
+    },
+    position_color(num) {
+      return Position.color(num);
     },
   },
 };
