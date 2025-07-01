@@ -460,12 +460,13 @@ export default {
             .filter(Boolean);
 
           this.candidate_loading = true;
+          let self = this;
           await Api.post(
             "/admin/candidate",
             { name: names },
             function (status, data) {
-              this.candidate_loading = true;
-              this.$emit("save");
+              self.candidate_loading = true;
+              self.$emit("save");
             }
           );
         } catch (e) {
