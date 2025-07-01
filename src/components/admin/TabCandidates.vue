@@ -460,9 +460,14 @@ export default {
             .filter(Boolean);
 
           this.candidate_loading = true;
-          await Api.post("/admin/candidate", { name: names });
-          this.candidate_loading = true;
-          this.$emit("save");
+          await Api.post(
+            "/admin/candidate",
+            { name: names },
+            function (status, data) {
+              this.candidate_loading = true;
+              this.$emit("save");
+            }
+          );
         } catch (e) {
           Swal.fire({
             title: "Erro ao importar arquivo",
@@ -477,7 +482,11 @@ export default {
       input.click();
     },
     position_color(num) {
-      return Position.color(num);
+      $ret = Position.color(num);
+      if (!$ret || !Array.isArray($ret) || $ret.length < 2) {
+        $ret = ["#000", "#FFF"];
+      }
+      return $ret;
     },
   },
 };
