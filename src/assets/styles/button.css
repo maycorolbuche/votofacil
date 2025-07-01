@@ -19,3 +19,16 @@ button.swal2-styled {
 button.btn-dark {
     background-color: #333333;
 }
+
+button.btn {
+    white-space: nowrap;
+}
+
+
+button.btn-info svg {
+    fill: #000;
+}
+
+button.btn-danger svg {
+    fill: white;
+}

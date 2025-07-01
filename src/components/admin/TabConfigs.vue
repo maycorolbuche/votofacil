@@ -77,7 +77,6 @@ export default {
     configs: [],
     lock: false,
   }),
-  computed: {},
   watch: {
     data: {
       handler(newVal) {
@@ -91,7 +90,6 @@ export default {
   methods: {
     async save_config(group_key, config_key, value) {
       this.lock = true;
-      console.log("fdfsfds", group_key, config_key, value);
 
       let self = this;
       await Api.post(

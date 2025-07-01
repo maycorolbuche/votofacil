@@ -8,7 +8,18 @@
             v-model="candidate_name_new"
             @keyup.enter="add_candidate()"
             :state="candidate_name_new_error ? false : null"
+            list="list-names"
           />
+          <datalist
+            v-if="
+              data?.configs?.candidates.items?.repeated_names?.value == 'vote'
+            "
+            id="list-names"
+          >
+            <option v-for="candidate in candidates" :key="candidate.id">
+              {{ candidate.name }}
+            </option>
+          </datalist>
         </div>
         <div class="ps-2">
           <BButton
@@ -38,6 +49,16 @@
         {{ candidate_name_new_error }}
       </BAlert>
     </BCardText>
+
+    <BProgress
+      v-if="candidate_loading"
+      variant="info"
+      :value="100"
+      height="5px"
+      striped
+      animated
+    />
+    <div v-else style="height: 5px" />
 
     <div class="overflow d-flex flex-column" style="flex: 1">
       <BTable
@@ -122,12 +143,6 @@
           </BPopover>
           <BPopover v-else-if="row.item.user_votes && row.item.admin_votes">
             <template #target>
-              <small>
-                <span class="text-warning">+{{ row.item.admin_votes }}</span>
-                &nbsp;
-                <span class="text-info">+{{ row.item.user_votes }}</span>
-                &nbsp;
-              </small>
               <BBadge variant="danger">
                 {{ row.item.total_votes }}
               </BBadge>
@@ -191,7 +206,26 @@
     <BCardText class="m-0">
       <div class="d-flex align-items-center">
         <div style="flex: 1"></div>
-        <div class="ps-2">
+        <div class="ps-2 d-flex align-items-center" style="gap: 5px">
+          <BButton
+            :disabled="candidate_import_loading"
+            class="w-100 my-2"
+            variant="info"
+            @click="import_candidate()"
+          >
+            <svg
+              v-if="!candidate_import_loading"
+              style="width: 20px"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M17,21L14.25,18L15.41,16.84L17,18.43L20.59,14.84L21.75,16.25M12.8,21H5C3.89,21 3,20.11 3,19V5C3,3.89 3.89,3 5,3H19C20.11,3 21,3.89 21,5V12.8C20.39,12.45 19.72,12.2 19,12.08V5H5V19H12.08C12.2,19.72 12.45,20.39 12.8,21M12,17H7V15H12M14.68,13H7V11H17V12.08C16.15,12.22 15.37,12.54 14.68,13M17,9H7V7H17"
+              />
+            </svg>
+            <BSpinner v-else small class="mx-1" />
+            Importar Nomes
+          </BButton>
           <BButton
             :disabled="candidate_deleting_all_loading"
             class="w-100 my-2"
@@ -200,7 +234,7 @@
           >
             <svg
               v-if="!candidate_deleting_all_loading"
-              style="width: 20px; fill: white"
+              style="width: 20px"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
@@ -245,6 +279,8 @@ export default {
     data: Object,
   },
   data: () => ({
+    candidate_loading: false,
+
     candidate_name_new: null,
     candidate_name_new_loading: false,
     candidate_name_new_error: null,
@@ -255,6 +291,8 @@ export default {
 
     candidate_deleting_all_loading: false,
     candidate_deleting: [],
+
+    candidate_import_loading: false,
   }),
   computed: {
     candidates() {
@@ -291,6 +329,7 @@ export default {
     data: {
       handler(newVal) {
         this.candidate_updating = [];
+        this.candidate_loading = false;
       },
       deep: true,
     },
@@ -305,6 +344,7 @@ export default {
       }
 
       this.candidate_name_new_loading = true;
+      this.candidate_loading = true;
       let self = this;
       await Api.post(
         "/admin/candidate",
@@ -318,6 +358,7 @@ export default {
           }
 
           self.candidate_name_new = null;
+          self.candidate_loading = true;
           self.$emit("save");
         }
       );
@@ -401,6 +442,38 @@ export default {
           });
         }
       });
+    },
+    async import_candidate() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".txt";
+      input.onchange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        this.candidate_import_loading = true;
+        this.candidate_loading = true;
+        try {
+          const text = await file.text();
+          const names = text
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter(Boolean);
+          console.log(names);
+
+          await Api.post("/admin/candidate", { name: names });
+          this.$emit("save");
+        } catch (e) {
+          Swal.fire({
+            title: "Erro ao importar arquivo",
+            text: e.message,
+            icon: "error",
+          });
+          this.candidate_loading = false;
+        } finally {
+          this.candidate_import_loading = false;
+        }
+      };
+      input.click();
     },
     position_color(num) {
       return Position.color(num);
