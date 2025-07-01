@@ -329,7 +329,9 @@ export default {
     data: {
       handler(newVal) {
         this.candidate_updating = [];
-        this.candidate_loading = false;
+        if (!this.candidate_import_loading) {
+          this.candidate_loading = false;
+        }
       },
       deep: true,
     },
@@ -466,6 +468,7 @@ export default {
             { name: names },
             function (status, data) {
               self.candidate_loading = true;
+              self.candidate_import_loading = false;
               self.$emit("save");
             }
           );
@@ -476,7 +479,6 @@ export default {
             icon: "error",
           });
           this.candidate_loading = false;
-        } finally {
           this.candidate_import_loading = false;
         }
       };
