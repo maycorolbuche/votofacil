@@ -482,11 +482,11 @@ export default {
       input.click();
     },
     position_color(num) {
-      $ret = Position.color(num);
-      if (!$ret || !Array.isArray($ret) || $ret.length < 2) {
-        $ret = ["#000", "#FFF"];
+      let ret = Position.color(num);
+      if (!ret || !Array.isArray(ret) || ret.length < 2) {
+        ret = ["#000", "#FFF"];
       }
-      return $ret;
+      return ret;
     },
   },
 };
