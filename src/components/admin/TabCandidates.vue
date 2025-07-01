@@ -101,6 +101,7 @@
             style="margin-top: -6px; margin-bottom: -6px; height: 38px"
           >
             <BAvatar
+              v-if="data?.resume?.total_votes"
               :style="
                 'background-color: ' +
                 position_color(row.item.position)[0] +
@@ -112,6 +113,7 @@
               size="34px"
               :text="row.item.position + 'º'"
             />
+            <BAvatar v-else size="34px" text="." />
           </div>
         </template>
 

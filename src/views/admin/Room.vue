@@ -45,6 +45,11 @@
             </BCardText>
           </BTab>
           <TabConfigs :data="data" @save="load_data" />
+          <BTab v-if="isDebug" title="Params">
+            <BCardText class="overflow overflow-auto">
+              <pre>{{ data }}</pre>
+            </BCardText>
+          </BTab>
         </BTabs>
       </BCard>
     </div>
@@ -84,6 +89,14 @@ export default {
     lock: false,
     count_error: 0,
   }),
+  computed: {
+    isDebug() {
+      const isLocalhost = window.location.hostname === "localhost";
+      const urlParams = new URLSearchParams(window.location.search);
+      const hasDebugParam = urlParams.get("debug") === "true";
+      return isLocalhost || hasDebugParam;
+    },
+  },
   methods: {
     async load_data() {
       if (this.lock) {
