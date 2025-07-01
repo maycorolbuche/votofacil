@@ -458,8 +458,8 @@ export default {
             .split(/\r?\n/)
             .map((line) => line.trim())
             .filter(Boolean);
-          console.log(names);
 
+          this.candidate_loading = true;
           await Api.post("/admin/candidate", { name: names });
           this.$emit("save");
         } catch (e) {
