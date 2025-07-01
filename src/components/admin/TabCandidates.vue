@@ -461,6 +461,7 @@ export default {
 
           this.candidate_loading = true;
           await Api.post("/admin/candidate", { name: names });
+          this.candidate_loading = true;
           this.$emit("save");
         } catch (e) {
           Swal.fire({
