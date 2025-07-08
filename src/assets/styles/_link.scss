@@ -1,0 +1,13 @@
+a {
+  &:not(.dropdown-item) {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.link-white {
+    color: #fff;
+  }
+}
