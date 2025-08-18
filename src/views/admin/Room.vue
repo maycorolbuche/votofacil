@@ -1,7 +1,7 @@
 <template>
   <ErrorMessage v-if="error" :message="error" />
   <div v-else-if="data" class="vh-100 d-flex flex-column" style="height: 100vh">
-    <Header :data="data" @save="load_data" />
+    <Header :data="data" @save="load_data(true)" />
 
     <div
       class="flex-grow-1 d-flex flex-column content-container"
@@ -9,7 +9,7 @@
     >
       <BCard no-body class="mx-2">
         <BTabs card>
-          <TabCandidates :data="data" @save="load_data" />
+          <TabCandidates :data="data" @save="load_data(true)" />
           <BTab title="Eleitores">
             <BCardText>Tab contents 2</BCardText>
           </BTab>
@@ -44,7 +44,7 @@
               Tab contents 2<br />
             </BCardText>
           </BTab>
-          <TabConfigs :data="data" @save="load_data" />
+          <TabConfigs :data="data" @save="load_data(true)" />
           <BTab v-if="isDebug" title="Params">
             <BCardText class="overflow overflow-auto">
               <pre>{{ data }}</pre>
@@ -88,6 +88,7 @@ export default {
     timer: null,
     lock: false,
     count_error: 0,
+    abort_controller: null,
   }),
   computed: {
     isDebug() {
@@ -98,10 +99,18 @@ export default {
     },
   },
   methods: {
-    async load_data() {
+    async load_data(force) {
+      if (force) {
+        this.abort();
+        console.log("FORCE");
+      }
+
       if (this.lock) {
         return;
       }
+
+      this.abort_controller = new AbortController();
+      const signal = this.abort_controller.signal;
 
       this.lock = true;
       let self = this;
@@ -124,6 +133,11 @@ export default {
         self.error = null;
         self.data = data;
       });
+    },
+    abort() {
+      if (this.abort_controller) {
+        this.abort_controller.abort();
+      }
     },
   },
   mounted() {

@@ -45,6 +45,12 @@ export default {
     callback = function () {}
   ) {
     let params = "";
+
+    let signal = options?.__signal;
+    if (options?.__signal) {
+      delete options.__signal;
+    }
+
     if (options) {
       params = `?${this.data_to_url(options)}`;
     }
@@ -72,6 +78,7 @@ export default {
       method,
       headers,
       body,
+      signal,
     }).catch((err) => {
       callback(false, `Erro ao estabelecer conexão com o servidor!`);
       return false;
