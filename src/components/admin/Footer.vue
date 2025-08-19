@@ -17,38 +17,31 @@
         <div>
           <BBadge class="text-truncate w-100"> Votos </BBadge>
           <div class="d-flex align-items-center justify-content-center">
-            <div>
+            <div class="d-flex align-items-center" style="gap: 5px">
+              <TicketAccountIcon color="#777" :size="28" />
               <BCardTitle class="text-truncate m-0 text-center">
                 {{ data?.resume?.admin_votes }}
               </BCardTitle>
             </div>
-            <div class="border-start ms-2 ps-2">
+            <div
+              class="d-flex align-items-center border-start ms-2 ps-2"
+              style="gap: 5px"
+            >
+              <VoteIcon color="#777" :size="28" />
               <BCardTitle class="text-truncate m-0 text-center">
                 {{ data?.resume?.user_votes }}
               </BCardTitle>
             </div>
-            <div class="border-start ms-2 ps-2">
+            <div
+              class="d-flex align-items-center border-start ms-2 ps-2"
+              style="gap: 5px"
+            >
+              <BallotOutline color="#777" :size="28" />
               <BCardTitle class="text-truncate m-0 text-center">
                 {{ data?.resume?.total_votes }}
               </BCardTitle>
             </div>
           </div>
-        </div>
-        <div>
-          <BCardText class="text-truncate m-0 small text-center">
-            Votos Usuários:
-          </BCardText>
-          <BCardTitle class="text-truncate m-0 text-center">
-            {{ data?.resume?.user_votes }}
-          </BCardTitle>
-        </div>
-        <div>
-          <BCardText class="text-truncate m-0 small text-center">
-            Votos:
-          </BCardText>
-          <BCardTitle class="text-truncate m-0 text-center">
-            {{ data?.resume?.total_votes }}
-          </BCardTitle>
         </div>
       </div>
       <div>
@@ -64,12 +57,18 @@
 import WebIcon from "@/components/icons/Web.vue";
 import WebCheckIcon from "@/components/icons/WebCheck.vue";
 import WebSyncIcon from "@/components/icons/WebSync.vue";
+import TicketAccountIcon from "@/components/icons/TicketAccount.vue";
+import VoteIcon from "@/components/icons/Vote.vue";
+import BallotOutlineIcon from "@/components/icons/BallotOutline.vue";
 
 export default {
   components: {
     WebIcon,
     WebCheckIcon,
     WebSyncIcon,
+    TicketAccountIcon,
+    VoteIcon,
+    BallotOutlineIcon,
   },
   props: {
     data: Object,
