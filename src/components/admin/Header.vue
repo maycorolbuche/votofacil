@@ -7,16 +7,7 @@
       <div class="mx-2">
         <BSpinner small v-if="this.modal_room_name.loading" />
         <BLink v-else @click="modal_room_name.show = !modal_room_name.show">
-          <svg
-            style="width: 20px"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <title>Renomear Sala</title>
-            <path
-              d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
-            />
-          </svg>
+          <PencilIcon :size="20" />
         </BLink>
       </div>
       <div class="overflow-auto" style="flex: auto">
@@ -35,14 +26,7 @@
           no-caret
         >
           <template #button-content>
-            <svg
-              style="width: 24px"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <title>Menu</title>
-              <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
-            </svg>
+            <MenuIcon :size="24" />
           </template>
           <BDropdownItem href="#">Action</BDropdownItem>
           <BDropdownItem href="#">Another action</BDropdownItem>
@@ -71,7 +55,14 @@
 import Api from "@/services/Api.js";
 import Swal from "sweetalert2";
 
+import MenuIcon from "@/components/icons/Menu.vue";
+import PencilIcon from "@/components/icons/Pencil.vue";
+
 export default {
+  components: {
+    MenuIcon,
+    PencilIcon,
+  },
   props: {
     data: Object,
   },

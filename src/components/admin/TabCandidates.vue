@@ -28,15 +28,12 @@
             variant="dark"
             @click="add_candidate()"
           >
-            <svg
+            <PlusThickIcon
               v-if="!candidate_name_new_loading"
-              style="width: 20px; fill: white"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path d="M20 14H14V20H10V14H4V10H10V4H14V10H20V14Z" />
-            </svg>
-            <BSpinner v-else small class="mx-1" />
+              :size="20"
+              color="#FFF"
+            />
+            <BSpinner v-else small class="ms-1" />
           </BButton>
         </div>
       </div>
@@ -168,28 +165,10 @@
                 candidate_update_modal = !candidate_update_modal;
               "
             >
-              <svg
-                style="width: 24px; fill: var(--bs-warning)"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <title>Editar</title>
-                <path
-                  d="M15 16L11 20H21V16H15M12.06 7.19L3 16.25V20H6.75L15.81 10.94L12.06 7.19M5.92 18H5V17.08L12.06 10L13 10.94L5.92 18M18.71 8.04C19.1 7.65 19.1 7 18.71 6.63L16.37 4.29C16.17 4.09 15.92 4 15.66 4C15.41 4 15.15 4.1 14.96 4.29L13.13 6.12L16.88 9.87L18.71 8.04Z"
-                />
-              </svg>
+              <RenameOutline color="var(--bs-warning)" />
             </BLink>
             <BLink @click="delete_candidate(row.item.id)">
-              <svg
-                style="width: 24px; fill: var(--bs-danger)"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <title>Excluir</title>
-                <path
-                  d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
-                />
-              </svg>
+              <TrashCanOutline color="var(--bs-danger)" />
             </BLink>
           </div>
           <div v-else class="text-end">
@@ -215,16 +194,7 @@
             variant="info"
             @click="import_candidate()"
           >
-            <svg
-              v-if="!candidate_import_loading"
-              style="width: 20px"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M17,21L14.25,18L15.41,16.84L17,18.43L20.59,14.84L21.75,16.25M12.8,21H5C3.89,21 3,20.11 3,19V5C3,3.89 3.89,3 5,3H19C20.11,3 21,3.89 21,5V12.8C20.39,12.45 19.72,12.2 19,12.08V5H5V19H12.08C12.2,19.72 12.45,20.39 12.8,21M12,17H7V15H12M14.68,13H7V11H17V12.08C16.15,12.22 15.37,12.54 14.68,13M17,9H7V7H17"
-              />
-            </svg>
+            <TextBoxCheckOutline v-if="!candidate_import_loading" :size="20" />
             <BSpinner v-else small class="mx-1" />
             Importar Nomes
           </BButton>
@@ -234,16 +204,10 @@
             variant="danger"
             @click="delete_all_candidate()"
           >
-            <svg
+            <TrashCanOutlineIcon
               v-if="!candidate_deleting_all_loading"
-              style="width: 20px"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"
-              />
-            </svg>
+              :size="20"
+            />
             <BSpinner v-else small class="mx-1" />
             Apagar todos
           </BButton>
@@ -276,7 +240,18 @@ import Api from "@/services/Api.js";
 import Position from "@/helpers/Position.js";
 import Swal from "sweetalert2";
 
+import PlusThickIcon from "@/components/icons/PlusThick.vue";
+import RenameOutlineIcon from "@/components/icons/RenameOutline.vue";
+import TrashCanOutlineIcon from "@/components/icons/TrashCanOutline.vue";
+import TextBoxCheckOutlineIcon from "@/components/icons/TextBoxCheckOutline.vue";
+
 export default {
+  components: {
+    PlusThickIcon,
+    RenameOutlineIcon,
+    TrashCanOutlineIcon,
+    TextBoxCheckOutlineIcon,
+  },
   props: {
     data: Object,
   },
