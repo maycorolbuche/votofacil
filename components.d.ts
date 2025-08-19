@@ -31,6 +31,7 @@ declare module 'vue' {
     BTab: typeof import('bootstrap-vue-next/components/BTabs')['BTab']
     BTable: typeof import('bootstrap-vue-next/components/BTable')['BTable']
     BTabs: typeof import('bootstrap-vue-next/components/BTabs')['BTabs']
+    CardAccountDetails: typeof import('./src/components/icons/CardAccountDetails.vue')['default']
     copy: typeof import('./src/components/icons/TicketAccount copy.vue')['default']
     ErrorMessage: typeof import('./src/components/ErrorMessage.vue')['default']
     Footer: typeof import('./src/components/admin/Footer.vue')['default']

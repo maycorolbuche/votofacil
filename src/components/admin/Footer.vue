@@ -12,19 +12,24 @@
       </div>
       <div
         class="overflow-auto d-flex align-items-center justify-content-center"
-        style="flex: auto; gap: 10px"
+        style="flex: auto"
       >
         <div>
           <BBadge class="text-truncate w-100"> Votos </BBadge>
           <div class="d-flex align-items-center justify-content-center">
-            <div class="d-flex align-items-center" style="gap: 5px">
+            <div
+              v-if="data?.resume?.admin_votes && data?.resume?.user_votes"
+              class="d-flex align-items-center mx-1 px-1 border-end"
+              style="gap: 5px"
+            >
               <TicketAccountIcon color="#777" :size="28" />
               <BCardTitle class="text-truncate m-0 text-center">
                 {{ data?.resume?.admin_votes }}
               </BCardTitle>
             </div>
             <div
-              class="d-flex align-items-center border-start ms-2 ps-2"
+              v-if="data?.resume?.admin_votes && data?.resume?.user_votes"
+              class="d-flex align-items-center mx-1 px-1 border-end"
               style="gap: 5px"
             >
               <VoteIcon color="#777" :size="28" />
@@ -32,13 +37,21 @@
                 {{ data?.resume?.user_votes }}
               </BCardTitle>
             </div>
-            <div
-              class="d-flex align-items-center border-start ms-2 ps-2"
-              style="gap: 5px"
-            >
+            <div class="d-flex align-items-center mx-1 px-1" style="gap: 5px">
               <BallotOutline color="#777" :size="28" />
               <BCardTitle class="text-truncate m-0 text-center">
                 {{ data?.resume?.total_votes }}
+              </BCardTitle>
+            </div>
+          </div>
+        </div>
+        <div class="border-start ms-1 ps-1">
+          <BBadge class="text-truncate w-100"> Candidatos </BBadge>
+          <div class="d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center mx-1 px-1" style="gap: 5px">
+              <CardAccountDetailsIcon color="#777" :size="28" />
+              <BCardTitle class="text-truncate m-0 text-center">
+                {{ data?.resume?.total_candidates }}
               </BCardTitle>
             </div>
           </div>
@@ -60,6 +73,7 @@ import WebSyncIcon from "@/components/icons/WebSync.vue";
 import TicketAccountIcon from "@/components/icons/TicketAccount.vue";
 import VoteIcon from "@/components/icons/Vote.vue";
 import BallotOutlineIcon from "@/components/icons/BallotOutline.vue";
+import CardAccountDetailsIcon from "@/components/icons/CardAccountDetails.vue";
 
 export default {
   components: {
@@ -69,6 +83,7 @@ export default {
     TicketAccountIcon,
     VoteIcon,
     BallotOutlineIcon,
+    CardAccountDetailsIcon,
   },
   props: {
     data: Object,
