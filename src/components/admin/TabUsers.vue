@@ -1,6 +1,9 @@
 <template>
   <BTab class="content-container">
-    <template #title> Eleitores </template>
+    <template #title>
+      <BSpinner v-if="processing" small type="grow" />
+      Eleitores
+    </template>
 
     <BAccordion class="h-100">
       <BAccordionItem
@@ -52,26 +55,55 @@
                 class="text-end"
                 v-if="
                   !user_deleting.includes(row.item.id) &&
-                  !user_updating.includes(row.item.id)
+                  !user_updating.includes(row.item.id) &&
+                  !user_approving.includes(row.item.id) &&
+                  !user_disapproving.includes(row.item.id)
                 "
               >
+                <!--
                 <BLink
                   @click="
                     user_update_data = Object.assign({}, row.item);
                     user_update_modal = !user_update_modal;
                   "
                 >
-                  <RenameOutline color="var(--bs-warning)" />
+                  <RenameOutlineIcon color="var(--bs-warning)" />
                 </BLink>
                 <BLink @click="delete_user(row.item.id)">
-                  <TrashCanOutline color="var(--bs-danger)" />
+                  <TrashCanOutlineIcon color="var(--bs-danger)" />
                 </BLink>
+                -->
+
+                <div v-if="status === 'pending'">
+                  <BButton
+                    variant="success"
+                    size="sm"
+                    class="mx-1"
+                    @click="approve_user(row.item.id)"
+                  >
+                    <CheckBoldIcon color="#FFF" :size="15" />
+                    Aprovar
+                  </BButton>
+                  <BButton
+                    variant="danger"
+                    size="sm"
+                    class="mx-1"
+                    @click="disapprove_user(row.item.id)"
+                  >
+                    <CloseThickIcon color="#FFF" :size="15" />
+                    Negar
+                  </BButton>
+                </div>
               </div>
               <div v-else class="text-end">
                 <BSpinner
                   small
                   :variant="
-                    user_deleting.includes(row.item.id) ? 'danger' : 'warning'
+                    user_approving.includes(row.item.id)
+                      ? 'success'
+                      : user_approving.includes(row.item.id)
+                      ? 'warning'
+                      : 'danger'
                   "
                   class="mx-1"
                 />
@@ -90,15 +122,20 @@ import Position from "@/helpers/Position.js";
 import Swal from "sweetalert2";
 
 import CellphoneIcon from "@/components/icons/Cellphone.vue";
+import CheckBoldIcon from "@/components/icons/CheckBold.vue";
+import CloseThickIcon from "@/components/icons/CloseThick.vue";
 
 export default {
   components: {
     CellphoneIcon,
+    CheckBoldIcon,
+    CloseThickIcon,
   },
   props: {
     data: Object,
   },
   data: () => ({
+    processing: false,
     /*user_loading: false,
 
     user_name_new: null,
@@ -115,6 +152,9 @@ user_deleting_all_loading: false,
     user_deleting: [],
     /*
     user_import_loading: false,*/
+
+    user_approving: [],
+    user_disapproving: [],
   }),
   computed: {
     status_list() {
@@ -169,12 +209,24 @@ user_deleting_all_loading: false,
       this.user_updating = this.user_updating.filter((id) =>
         userIds.includes(id)
       );
+      this.user_approving = this.user_approving.filter((id) =>
+        userIds.includes(id)
+      );
+      this.user_disapproving = this.user_disapproving.filter((id) =>
+        userIds.includes(id)
+      );
       return users.map((user) => {
         if (this.user_deleting.includes(user.id)) {
           return { ...user, _rowVariant: "danger" };
         }
         if (this.user_updating.includes(user.id)) {
           return { ...user, _rowVariant: "warning" };
+        }
+        if (this.user_approving.includes(user.id)) {
+          return { ...user, _rowVariant: "success" };
+        }
+        if (this.user_disapproving.includes(user.id)) {
+          return { ...user, _rowVariant: "danger" };
         }
         return user;
       });
@@ -187,29 +239,52 @@ user_deleting_all_loading: false,
           this.users.filter((user) => user.status === "disapproved") ?? [],
       };
     },
-    /*has_user_name_new: {
-      get() {
-        return !!this.user_name_new_error;
-      },
-      set(value) {
-        if (!value) {
-          this.user_name_new_error = null;
-        }
-      },
-    },*/
   },
-  /*watch: {
+  watch: {
     data: {
       handler(newVal) {
-        this.user_updating = [];
-        if (!this.user_import_loading) {
-          this.user_loading = false;
+        if (!this.processing) {
+          this.user_updating = [];
+          this.user_approving = [];
+          this.user_disapproving = [];
+          if (!this.user_import_loading) {
+            this.user_loading = false;
+          }
         }
       },
       deep: true,
     },
-  },*/
+  },
   methods: {
+    async approve_user(id) {
+      this.user_approving.push(id);
+      await this.change_status_user(id, "approved");
+    },
+    async disapprove_user(id) {
+      this.user_disapproving.push(id);
+      await this.change_status_user(id, "disapproved");
+    },
+    async change_status_user(id, status) {
+      /*
+      let self = this;
+      await Api.patch(
+        "/admin/user",
+        { ...this.user_update_data },
+        function (status, data) {
+          if (!status) {
+            Swal.fire({ title: data, icon: "error" });
+            const index = self.user_updating.indexOf(id);
+            if (index !== -1) {
+              self.user_updating.splice(index, 1);
+            }
+            return;
+          }
+
+          self.$emit("save");
+        }
+      );
+       */
+    },
     /* async add_user() {
       this.user_name_new_error = null;
 

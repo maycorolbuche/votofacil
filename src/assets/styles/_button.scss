@@ -18,6 +18,11 @@ button {
     font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica,
       Arial, "Bai Jamjuree", sans-serif;
 
+    &.btn-sm {
+      height: 24px;
+      font-size: 0.75rem;
+    }
+
     &.btn-dark {
       background-color: #333333;
     }

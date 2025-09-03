@@ -1,6 +1,7 @@
 <template>
   <BTab class="py-0">
     <template #title>
+      <BSpinner v-if="processing" small type="grow" />
       Candidatos
       <BBadge variant="info">
         {{ data?.resume?.total_candidates }}
@@ -172,10 +173,10 @@
                 candidate_update_modal = !candidate_update_modal;
               "
             >
-              <RenameOutline color="var(--bs-warning)" />
+              <RenameOutlineIcon color="var(--bs-warning)" />
             </BLink>
             <BLink @click="delete_candidate(row.item.id)">
-              <TrashCanOutline color="var(--bs-danger)" />
+              <TrashCanOutlineIcon color="var(--bs-danger)" />
             </BLink>
           </div>
           <div v-else class="text-end">
@@ -263,6 +264,7 @@ export default {
     data: Object,
   },
   data: () => ({
+    processing: false,
     candidate_loading: false,
 
     candidate_name_new: null,
@@ -312,9 +314,13 @@ export default {
   watch: {
     data: {
       handler(newVal) {
-        this.candidate_updating = [];
-        if (!this.candidate_import_loading) {
+        if (!this.processing) {
           this.candidate_loading = false;
+
+          this.candidate_updating = [];
+          if (!this.candidate_import_loading) {
+            this.candidate_loading = false;
+          }
         }
       },
       deep: true,
@@ -331,11 +337,14 @@ export default {
 
       this.candidate_name_new_loading = true;
       this.candidate_loading = true;
+
+      this.processing = true;
       let self = this;
       await Api.post(
         "/admin/candidate",
         { name: this.candidate_name_new },
         function (status, data) {
+          self.processing = true;
           self.candidate_name_new_loading = false;
 
           if (!status) {
@@ -358,11 +367,13 @@ export default {
       let id = this.candidate_update_data.id;
       this.candidate_updating.push(id);
 
+      this.processing = true;
       let self = this;
       await Api.patch(
         "/admin/candidate",
         { ...this.candidate_update_data },
         function (status, data) {
+          self.processing = false;
           if (!status) {
             Swal.fire({ title: data, icon: "error" });
             const index = self.candidate_updating.indexOf(id);
@@ -387,8 +398,10 @@ export default {
         if (result.isConfirmed) {
           this.candidate_deleting.push(id);
 
+          this.processing = true;
           let self = this;
           Api.delete("/admin/candidate", { id }, function (status, data) {
+            self.processing = false;
             if (!status) {
               Swal.fire({ title: data, icon: "error" });
               const index = self.candidate_deleting.indexOf(id);
@@ -414,8 +427,10 @@ export default {
         if (result.isConfirmed) {
           this.candidate_deleting_all_loading = true;
 
+          this.processing = true;
           let self = this;
           Api.delete("/admin/candidate", null, function (status, data) {
+            self.processing = false;
             self.candidate_deleting_all_loading = false;
 
             if (!status) {
@@ -446,11 +461,13 @@ export default {
             .filter(Boolean);
 
           this.candidate_loading = true;
+          this.processing = true;
           let self = this;
           await Api.post(
             "/admin/candidate",
             { name: names },
             function (status, data) {
+              self.processing = false;
               self.candidate_loading = true;
               self.candidate_import_loading = false;
               self.$emit("save");
