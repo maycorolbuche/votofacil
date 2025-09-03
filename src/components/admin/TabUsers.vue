@@ -122,12 +122,14 @@ user_deleting_all_loading: false,
         approved: {
           title: "Aprovados",
           color: "info",
-          visible: true,
+          visible: this.users_grouped?.approved?.length > 0,
         },
         pending: {
           title: "Pendentes",
           color: "warning",
-          visible: false,
+          visible:
+            this.users_grouped?.approved?.length <= 0 &&
+            this.users_grouped?.pending?.length > 0,
         },
         disapproved: {
           title: "Não autorizados",
