@@ -8,6 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BAccordion: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordion']
+    BAccordionItem: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordionItem']
     BAlert: typeof import('bootstrap-vue-next/components/BAlert')['BAlert']
     BallotOutline: typeof import('./src/components/icons/BallotOutline.vue')['default']
     BAvatar: typeof import('bootstrap-vue-next/components/BAvatar')['BAvatar']
@@ -32,7 +34,9 @@ declare module 'vue' {
     BTable: typeof import('bootstrap-vue-next/components/BTable')['BTable']
     BTabs: typeof import('bootstrap-vue-next/components/BTabs')['BTabs']
     CardAccountDetails: typeof import('./src/components/icons/CardAccountDetails.vue')['default']
-    copy: typeof import('./src/components/icons/TicketAccount copy.vue')['default']
+    Ce: typeof import('./src/components/icons/Ce.vue')['default']
+    Cellphone: typeof import('./src/components/icons/Cellphone.vue')['default']
+    copy: typeof import('./src/components/admin/TabCandidates copy.vue')['default']
     ErrorMessage: typeof import('./src/components/ErrorMessage.vue')['default']
     Footer: typeof import('./src/components/admin/Footer.vue')['default']
     Header: typeof import('./src/components/admin/Header.vue')['default']
@@ -45,6 +49,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     TabCandidates: typeof import('./src/components/admin/TabCandidates.vue')['default']
     TabConfigs: typeof import('./src/components/admin/TabConfigs.vue')['default']
+    TabUsers: typeof import('./src/components/admin/TabUsers.vue')['default']
     TextBoxCheck: typeof import('./src/components/icons/TextBoxCheck.vue')['default']
     TextBoxCheckOutline: typeof import('./src/components/icons/TextBoxCheckOutline.vue')['default']
     TicketAccount: typeof import('./src/components/icons/TicketAccount.vue')['default']

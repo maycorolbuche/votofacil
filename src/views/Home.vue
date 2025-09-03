@@ -96,6 +96,9 @@
       <router-link class="link-white" :to="{ name: 'About' }">
         Contato
       </router-link>
+
+      <span v-if="is_local" class="px-3">|</span>
+      <span v-if="is_local"> { localhost } </span>
     </small>
   </div>
 </template>
@@ -128,6 +131,9 @@ export default {
           this.error = null;
         }
       },
+    },
+    is_local() {
+      return Api.is_local();
     },
   },
   methods: {

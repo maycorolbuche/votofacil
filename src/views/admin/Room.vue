@@ -10,9 +10,7 @@
       <BCard no-body class="mx-2">
         <BTabs card>
           <TabCandidates :data="data" @save="load_data(true)" />
-          <BTab title="Eleitores">
-            <BCardText>Tab contents 2</BCardText>
-          </BTab>
+          <TabUsers :data="data" @save="load_data(true)" />
           <BTab title="Projetar">
             <BCardText>Tab contents 2</BCardText>
             <BCardText class="overflow overflow-auto">
@@ -72,6 +70,7 @@ import Header from "@/components/admin/Header.vue";
 import Footer from "@/components/admin/Footer.vue";
 import ErrorMessage from "@/components/ErrorMessage.vue";
 import TabCandidates from "@/components/admin/TabCandidates.vue";
+import TabUsers from "@/components/admin/TabUsers.vue";
 import TabConfigs from "@/components/admin/TabConfigs.vue";
 
 export default {
@@ -79,6 +78,7 @@ export default {
     Header,
     Footer,
     TabCandidates,
+    TabUsers,
     TabConfigs,
     ErrorMessage,
   },
@@ -92,7 +92,7 @@ export default {
   }),
   computed: {
     isDebug() {
-      const isLocalhost = window.location.hostname === "localhost";
+      const isLocalhost = Api.is_local();
       const urlParams = new URLSearchParams(window.location.search);
       const hasDebugParam = urlParams.get("debug") === "true";
       return isLocalhost || hasDebugParam;

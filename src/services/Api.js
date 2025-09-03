@@ -80,7 +80,7 @@ export default {
       body,
       signal,
     }).catch((err) => {
-      callback(false, `Erro ao estabelecer conexão com o servidor!`);
+      callback(false, `Erro ao estabelecer conexão com o servidor! ${err}`);
       return false;
     });
 
@@ -113,7 +113,10 @@ export default {
 
   is_local() {
     return (
-      window && window.location && window.location.hostname === "localhost"
+      window &&
+      window.location &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "192.168.1.110")
     );
   },
 

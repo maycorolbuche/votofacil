@@ -1,5 +1,12 @@
 <template>
-  <BTab title="Candidatos" class="py-0">
+  <BTab class="py-0">
+    <template #title>
+      Candidatos
+      <BBadge variant="info">
+        {{ data?.resume?.total_candidates }}
+      </BBadge>
+    </template>
+
     <BCardText class="m-0">
       <div class="d-flex align-items-center">
         <div style="flex: 1">
