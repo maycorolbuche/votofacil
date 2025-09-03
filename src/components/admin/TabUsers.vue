@@ -134,7 +134,10 @@ user_deleting_all_loading: false,
         disapproved: {
           title: "Não autorizados",
           color: "danger",
-          visible: false,
+          visible:
+            this.users_grouped?.approved?.length <= 0 &&
+            this.users_grouped?.pending?.length <= 0 &&
+            this.users_grouped?.danger?.length > 0,
         },
       };
     },
