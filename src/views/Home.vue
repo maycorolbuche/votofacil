@@ -98,7 +98,7 @@
       </router-link>
 
       <span v-if="is_local" class="px-3">|</span>
-      <span v-if="is_local"> { localhost } </span>
+      <BBadge v-if="is_local" variant="info">localhost</BBadge>
     </small>
   </div>
 </template>

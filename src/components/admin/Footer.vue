@@ -58,6 +58,15 @@
         </div>
       </div>
       <div>
+        <BBadge v-if="is_local" variant="info" class="m-1">localhost</BBadge>
+        <BBadge
+          v-if="is_local"
+          :variant="data?.cache ? 'warning' : 'danger'"
+          class="m-1"
+        >
+          cache
+        </BBadge>
+
         <WebIcon v-if="!lock && data?.cache" />
         <WebCheckIcon v-else-if="!lock" />
         <WebSyncIcon v-else />
@@ -67,6 +76,8 @@
 </template>
 
 <script>
+import Api from "@/services/Api.js";
+
 import WebIcon from "@/components/icons/Web.vue";
 import WebCheckIcon from "@/components/icons/WebCheck.vue";
 import WebSyncIcon from "@/components/icons/WebSync.vue";
@@ -88,6 +99,11 @@ export default {
   props: {
     data: Object,
     lock: Boolean,
+  },
+  computed: {
+    is_local() {
+      return Api.is_local();
+    },
   },
 };
 </script>
