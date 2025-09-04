@@ -135,7 +135,7 @@ export default {
     data: Object,
   },
   data: () => ({
-    processing: false,
+    processing: 0,
     /*user_loading: false,
 
     user_name_new: null,
@@ -243,7 +243,7 @@ user_deleting_all_loading: false,
   watch: {
     data: {
       handler(newVal) {
-        if (!this.processing) {
+        if (this.processing == 0) {
           this.user_updating = [];
           this.user_approving = [];
           this.user_disapproving = [];

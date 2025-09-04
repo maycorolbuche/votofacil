@@ -264,7 +264,7 @@ export default {
     data: Object,
   },
   data: () => ({
-    processing: false,
+    processing: 0,
     candidate_loading: false,
 
     candidate_name_new: null,
@@ -314,7 +314,7 @@ export default {
   watch: {
     data: {
       handler(newVal) {
-        if (!this.processing) {
+        if (this.processing == 0) {
           this.candidate_loading = false;
 
           this.candidate_updating = [];
@@ -338,13 +338,13 @@ export default {
       this.candidate_name_new_loading = true;
       this.candidate_loading = true;
 
-      this.processing = true;
+      this.processing++;
       let self = this;
       await Api.post(
         "/admin/candidate",
         { name: this.candidate_name_new },
         function (status, data) {
-          self.processing = true;
+          self.processing--;
           self.candidate_name_new_loading = false;
 
           if (!status) {
@@ -367,13 +367,13 @@ export default {
       let id = this.candidate_update_data.id;
       this.candidate_updating.push(id);
 
-      this.processing = true;
+      this.processing++;
       let self = this;
       await Api.patch(
         "/admin/candidate",
         { ...this.candidate_update_data },
         function (status, data) {
-          self.processing = false;
+          self.processing--;
           if (!status) {
             Swal.fire({ title: data, icon: "error" });
             const index = self.candidate_updating.indexOf(id);
@@ -398,10 +398,10 @@ export default {
         if (result.isConfirmed) {
           this.candidate_deleting.push(id);
 
-          this.processing = true;
+          this.processing++;
           let self = this;
           Api.delete("/admin/candidate", { id }, function (status, data) {
-            self.processing = false;
+            self.processing--;
             if (!status) {
               Swal.fire({ title: data, icon: "error" });
               const index = self.candidate_deleting.indexOf(id);
@@ -427,10 +427,10 @@ export default {
         if (result.isConfirmed) {
           this.candidate_deleting_all_loading = true;
 
-          this.processing = true;
+          this.processing++;
           let self = this;
           Api.delete("/admin/candidate", null, function (status, data) {
-            self.processing = false;
+            self.processing--;
             self.candidate_deleting_all_loading = false;
 
             if (!status) {
@@ -461,13 +461,13 @@ export default {
             .filter(Boolean);
 
           this.candidate_loading = true;
-          this.processing = true;
+          this.processing++;
           let self = this;
           await Api.post(
             "/admin/candidate",
             { name: names },
             function (status, data) {
-              self.processing = false;
+              self.processing--;
               self.candidate_loading = true;
               self.candidate_import_loading = false;
               self.$emit("save");
