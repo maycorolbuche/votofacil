@@ -1,8 +1,16 @@
 <template>
   <BTab class="content-container">
     <template #title>
-      <BSpinner v-if="processing" small type="grow" />
+      <BSpinner
+        v-if="data?.resume?.total_pending_users > 0"
+        small
+        type="grow"
+        variant="warning"
+      />
       Eleitores
+      <BBadge v-if="data?.resume?.total_approved_users > 0" variant="info">
+        {{ data?.resume?.total_approved_users }}
+      </BBadge>
     </template>
 
     <BAccordion class="h-100">
@@ -162,14 +170,14 @@ user_deleting_all_loading: false,
         approved: {
           title: "Aprovados",
           color: "info",
-          visible: this.users_grouped?.approved?.length > 0,
+          visible:
+            this.users_grouped?.pending?.length <= 0 &&
+            this.users_grouped?.approved?.length > 0,
         },
         pending: {
           title: "Pendentes",
           color: "warning",
-          visible:
-            this.users_grouped?.approved?.length <= 0 &&
-            this.users_grouped?.pending?.length > 0,
+          visible: this.users_grouped?.pending?.length > 0,
         },
         disapproved: {
           title: "Não autorizados",

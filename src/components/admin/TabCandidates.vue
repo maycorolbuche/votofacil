@@ -1,9 +1,8 @@
 <template>
   <BTab class="py-0">
     <template #title>
-      <BSpinner v-if="processing" small type="grow" />
       Candidatos
-      <BBadge variant="info">
+      <BBadge v-if="data?.resume?.total_candidates > 0" variant="info">
         {{ data?.resume?.total_candidates }}
       </BBadge>
     </template>
