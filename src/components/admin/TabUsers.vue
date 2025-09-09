@@ -39,6 +39,7 @@
               {
                 key: 'options',
                 label: '',
+                class: 'p-0 pe-1 align-middle',
               },
             ]"
           >
@@ -81,6 +82,11 @@
                   <TrashCanOutlineIcon color="var(--bs-danger)" />
                 </BLink>
                 -->
+                <div v-if="status !== 'pending'">
+                  <BLink>
+                    <CheckBoldIcon color="var(--bs-danger)" />
+                  </BLink>
+                </div>
 
                 <div v-if="status === 'pending' && row.item.is_primary">
                   <BButton
@@ -129,12 +135,14 @@ import Api from "@/services/Api.js";
 import Position from "@/helpers/Position.js";
 import Swal from "sweetalert2";
 
+import DotsVerticalIcon from "@/components/icons/DotsVertical.vue";
 import CellphoneIcon from "@/components/icons/Cellphone.vue";
 import CheckBoldIcon from "@/components/icons/CheckBold.vue";
 import CloseThickIcon from "@/components/icons/CloseThick.vue";
 
 export default {
   components: {
+    DotsVerticalIcon,
     CellphoneIcon,
     CheckBoldIcon,
     CloseThickIcon,

@@ -96,6 +96,7 @@
           {
             key: 'options',
             label: '',
+            class: 'p-0 pe-1 align-middle',
           },
         ]"
       >
