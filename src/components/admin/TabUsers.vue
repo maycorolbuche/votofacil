@@ -82,7 +82,7 @@
                 </BLink>
                 -->
 
-                <div v-if="status === 'pending'">
+                <div v-if="status === 'pending' && row.item.is_primary">
                   <BButton
                     variant="success"
                     size="sm"
@@ -185,7 +185,7 @@ user_deleting_all_loading: false,
           visible:
             this.users_grouped?.approved?.length <= 0 &&
             this.users_grouped?.pending?.length <= 0 &&
-            this.users_grouped?.danger?.length > 0,
+            this.users_grouped?.disapproved?.length > 0,
         },
       };
     },
@@ -273,6 +273,32 @@ user_deleting_all_loading: false,
       await this.change_status_user(id, "disapproved");
     },
     async change_status_user(id, status) {
+      this.processing++;
+      let self = this;
+
+      await Api.patch(
+        "/admin/device",
+        { user_id: id, status },
+        function (status, data) {
+          self.processing--;
+
+          if (!status) {
+            Swal.fire({ title: data, icon: "error" });
+            const index_approving = self.user_approving.indexOf(id);
+            if (index_approving !== -1) {
+              self.user_approving.splice(index_approving, 1);
+            }
+            const index_disapproving = self.user_disapproving.indexOf(id);
+            if (index_disapproving !== -1) {
+              self.user_disapproving.splice(index_disapproving, 1);
+            }
+            return;
+          }
+
+          self.$emit("save");
+        }
+      );
+
       /*
       let self = this;
       await Api.patch(
