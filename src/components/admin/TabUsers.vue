@@ -45,7 +45,7 @@
           >
             <template #cell(name)="row">
               {{ row.item.name }}
-              <BPopover>
+              <BPopover :delay="1000">
                 <template #target>
                   <BBadge v-if="!row.item.is_primary" variant="warning">
                     <div class="d-flex align-items-center">
@@ -69,45 +69,70 @@
                   !user_disapproving.includes(row.item.id)
                 "
               >
-                <!--
+                <!-- EDITAR -->
                 <BLink
+                  v-if="row.item.status !== 'pending'"
                   @click="
                     user_update_data = Object.assign({}, row.item);
                     user_update_modal = !user_update_modal;
                   "
+                  class="mx-1"
                 >
                   <RenameOutlineIcon color="var(--bs-warning)" />
                 </BLink>
-                <BLink @click="delete_user(row.item.id)">
+
+                <!-- REVOGAR ACESSO -->
+                <BLink
+                  v-if="row.item.status === 'approved' && row.item.is_primary"
+                  @click="change_status_user_dialog(row.item.id, 'diapproved')"
+                  class="mx-1"
+                >
+                  <ThumbDownIcon color="var(--bs-danger)" />
+                </BLink>
+
+                <!-- APAGAR USUARIO -->
+                <BLink
+                  v-if="!row.item.is_primary"
+                  click="
+                        change_status_user_dialog(row.item.id, 'diapproved')
+                      "
+                  class="mx-1"
+                >
                   <TrashCanOutlineIcon color="var(--bs-danger)" />
                 </BLink>
-                -->
-                <div v-if="status !== 'pending'">
-                  <BLink>
-                    <CheckBoldIcon color="var(--bs-danger)" />
-                  </BLink>
-                </div>
 
-                <div v-if="status === 'pending' && row.item.is_primary">
-                  <BButton
-                    variant="success"
-                    size="sm"
-                    class="mx-1"
-                    @click="approve_user(row.item.id)"
-                  >
-                    <CheckBoldIcon color="#FFF" :size="15" />
-                    Aprovar
-                  </BButton>
-                  <BButton
-                    variant="danger"
-                    size="sm"
-                    class="mx-1"
-                    @click="disapprove_user(row.item.id)"
-                  >
-                    <CloseThickIcon color="#FFF" :size="15" />
-                    Negar
-                  </BButton>
-                </div>
+                <!-- AUTORIZAR ACESSO -->
+                <BLink
+                  v-if="
+                    row.item.status === 'disapproved' && row.item.is_primary
+                  "
+                  @click="change_status_user_dialog(row.item.id, 'approved')"
+                  class="mx-1"
+                >
+                  <ThumbUpIcon color="var(--bs-success)" />
+                </BLink>
+
+                <!-- BOTÕES APROVAR / DFESAPROVAR DISPOSITIVO PENDENTE -->
+                <BButton
+                  v-if="row.item.status === 'pending' && row.item.is_primary"
+                  variant="success"
+                  size="sm"
+                  class="mx-1"
+                  @click="approve_user(row.item.id)"
+                >
+                  <CheckBoldIcon color="#FFF" :size="15" />
+                  Aprovar
+                </BButton>
+                <BButton
+                  v-if="row.item.status === 'pending' && row.item.is_primary"
+                  variant="danger"
+                  size="sm"
+                  class="mx-1"
+                  @click="disapprove_user(row.item.id)"
+                >
+                  <CloseThickIcon color="#FFF" :size="15" />
+                  Negar
+                </BButton>
               </div>
               <div v-else class="text-end">
                 <BSpinner
@@ -115,7 +140,7 @@
                   :variant="
                     user_approving.includes(row.item.id)
                       ? 'success'
-                      : user_approving.includes(row.item.id)
+                      : user_updating.includes(row.item.id)
                       ? 'warning'
                       : 'danger'
                   "
@@ -127,18 +152,36 @@
         </div>
       </BAccordionItem>
     </BAccordion>
+
+    <BModal
+      v-model="user_update_modal"
+      title="Alterar candidato"
+      @ok="update_user"
+      cancel-title="Cancelar"
+      ok-title="Confirmar"
+    >
+      <BFormGroup label="Nome:">
+        <BFormInput
+          placeholder="Digite o nome"
+          v-model="user_update_data.name"
+        />
+      </BFormGroup>
+    </BModal>
   </BTab>
 </template>
 
 <script>
 import Api from "@/services/Api.js";
-import Position from "@/helpers/Position.js";
 import Swal from "sweetalert2";
 
 import DotsVerticalIcon from "@/components/icons/DotsVertical.vue";
 import CellphoneIcon from "@/components/icons/Cellphone.vue";
 import CheckBoldIcon from "@/components/icons/CheckBold.vue";
 import CloseThickIcon from "@/components/icons/CloseThick.vue";
+import ThumbUpIcon from "@/components/icons/ThumbUp.vue";
+import ThumbDownIcon from "@/components/icons/ThumbDown.vue";
+import RenameOutlineIcon from "@/components/icons/RenameOutline.vue";
+import TrashCanOutlineIcon from "@/components/icons/TrashCanOutline.vue";
 
 export default {
   components: {
@@ -146,6 +189,10 @@ export default {
     CellphoneIcon,
     CheckBoldIcon,
     CloseThickIcon,
+    ThumbUpIcon,
+    ThumbDownIcon,
+    RenameOutlineIcon,
+    TrashCanOutlineIcon,
   },
   props: {
     data: Object,
@@ -157,10 +204,9 @@ export default {
     user_name_new: null,
     user_name_new_loading: false,
     user_name_new_error: null,
-
+    */
     user_update_data: [],
     user_update_modal: false,
-    */
     user_updating: [],
     /*
 user_deleting_all_loading: false,
@@ -272,6 +318,28 @@ user_deleting_all_loading: false,
     },
   },
   methods: {
+    async change_status_user_dialog(id, status) {
+      if (status) {
+        Swal.fire({
+          title:
+            status == "approved"
+              ? "Deseja aprovar este dispositivo?"
+              : "Deseja revogar o acesso deste dispositivo?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Sim",
+          cancelButtonText: "Não",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (status == "approved") {
+              this.approve_user(id);
+            } else {
+              this.disapprove_user(id);
+            }
+          }
+        });
+      }
+    },
     async approve_user(id) {
       this.user_approving.push(id);
       await this.change_status_user(id, "approved");
@@ -354,7 +422,7 @@ user_deleting_all_loading: false,
           self.$emit("save");
         }
       );
-    },
+    },*/
     async update_user() {
       if (!this.user_update_data.name) {
         Swal.fire({ title: "Nome não informado!", icon: "error" });
@@ -364,11 +432,13 @@ user_deleting_all_loading: false,
       let id = this.user_update_data.id;
       this.user_updating.push(id);
 
+      this.processing++;
       let self = this;
       await Api.patch(
         "/admin/user",
         { ...this.user_update_data },
         function (status, data) {
+          self.processing--;
           if (!status) {
             Swal.fire({ title: data, icon: "error" });
             const index = self.user_updating.indexOf(id);
@@ -381,7 +451,7 @@ user_deleting_all_loading: false,
           self.$emit("save");
         }
       );
-    },
+    } /*
     async delete_user(id) {
       Swal.fire({
         title: "Deseja realmente apagar este(a) candidato(a)?",
@@ -480,7 +550,7 @@ user_deleting_all_loading: false,
         ret = ["#000", "#FFF"];
       }
       return ret;
-    },*/
+    },*/,
   },
 };
 </script>

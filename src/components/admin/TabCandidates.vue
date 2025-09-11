@@ -128,6 +128,7 @@
               row.item.admin_votes &&
               row.item.admin_votes == row.item.total_votes
             "
+            :delay="1000"
           >
             <template #target>
               <BBadge variant="warning">
@@ -140,6 +141,7 @@
             v-else-if="
               row.item.user_votes && row.item.user_votes == row.item.total_votes
             "
+            :delay="1000"
           >
             <template #target>
               <BBadge variant="info">
@@ -148,7 +150,10 @@
             </template>
             Votos dos usuários: <b>{{ row.item.user_votes }}</b>
           </BPopover>
-          <BPopover v-else-if="row.item.user_votes && row.item.admin_votes">
+          <BPopover
+            v-else-if="row.item.user_votes && row.item.admin_votes"
+            :delay="1000"
+          >
             <template #target>
               <BBadge variant="danger">
                 {{ row.item.total_votes }}
@@ -172,10 +177,11 @@
                 candidate_update_data = Object.assign({}, row.item);
                 candidate_update_modal = !candidate_update_modal;
               "
+              class="mx-1"
             >
               <RenameOutlineIcon color="var(--bs-warning)" />
             </BLink>
-            <BLink @click="delete_candidate(row.item.id)">
+            <BLink @click="delete_candidate(row.item.id)" class="mx-1">
               <TrashCanOutlineIcon color="var(--bs-danger)" />
             </BLink>
           </div>
