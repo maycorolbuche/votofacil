@@ -84,7 +84,13 @@
                 <!-- REVOGAR ACESSO -->
                 <BLink
                   v-if="row.item.status === 'approved' && row.item.is_primary"
-                  @click="change_status_user_dialog(row.item.id, 'diapproved')"
+                  @click="
+                    change_status_user_dialog(
+                      row.item.id,
+                      'diapproved',
+                      row.item.device_id
+                    )
+                  "
                   class="mx-1"
                 >
                   <ThumbDownIcon color="var(--bs-danger)" />
@@ -93,7 +99,7 @@
                 <!-- APAGAR USUARIO -->
                 <BLink
                   v-if="!row.item.is_primary"
-                  click="
+                  c-lick="
                         change_status_user_dialog(row.item.id, 'diapproved')
                       "
                   class="mx-1"
@@ -106,7 +112,13 @@
                   v-if="
                     row.item.status === 'disapproved' && row.item.is_primary
                   "
-                  @click="change_status_user_dialog(row.item.id, 'approved')"
+                  @click="
+                    change_status_user_dialog(
+                      row.item.id,
+                      'approved',
+                      row.item.device_id
+                    )
+                  "
                   class="mx-1"
                 >
                   <ThumbUpIcon color="var(--bs-success)" />
@@ -318,7 +330,7 @@ user_deleting_all_loading: false,
     },
   },
   methods: {
-    async change_status_user_dialog(id, status) {
+    async change_status_user_dialog(id, status, device_id) {
       if (status) {
         Swal.fire({
           title:
@@ -334,7 +346,22 @@ user_deleting_all_loading: false,
             if (status == "approved") {
               this.approve_user(id);
             } else {
-              this.disapprove_user(id);
+              let secondary_users = this.data?.room?.devices
+                .filter((d) => d.id == device_id)[0]
+                ?.users.filter((u) => !u.is_primary);
+
+              if (secondary_users.length > 0) {
+                let names = secondary_users.map((u) => u.name).join(", ");
+                if (names.length > 20) {
+                  names = names.slice(0, 20) + "...";
+                }
+                Swal.fire({
+                  title: `Antes de negar este dispositivo, remova os usuários vinculados primeiro! (${names})`,
+                  icon: "error",
+                });
+              } else {
+                this.disapprove_user(id);
+              }
             }
           }
         });
