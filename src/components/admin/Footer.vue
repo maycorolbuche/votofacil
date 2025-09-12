@@ -56,6 +56,30 @@
             </div>
           </div>
         </div>
+        <div class="border-start ms-1 ps-1">
+          <BBadge class="text-truncate w-100"> Eleitores </BBadge>
+          <div class="d-flex align-items-center justify-content-center">
+            <div
+              v-if="
+                data?.resume?.total_approved_users !=
+                data?.resume?.total_approved_devices
+              "
+              class="d-flex align-items-center mx-1 px-1 border-end"
+              style="gap: 5px"
+            >
+              <CellphoneIcon color="#777" :size="28" />
+              <BCardTitle class="text-truncate m-0 text-center">
+                {{ data?.resume?.total_approved_devices }}
+              </BCardTitle>
+            </div>
+            <div class="d-flex align-items-center mx-1 px-1" style="gap: 5px">
+              <AccountIcon color="#777" :size="28" />
+              <BCardTitle class="text-truncate m-0 text-center">
+                {{ data?.resume?.total_approved_users }}
+              </BCardTitle>
+            </div>
+          </div>
+        </div>
       </div>
       <div>
         <BBadge v-if="is_local" variant="info" class="m-1">localhost</BBadge>
@@ -85,6 +109,8 @@ import TicketAccountIcon from "@/components/icons/TicketAccount.vue";
 import VoteIcon from "@/components/icons/Vote.vue";
 import BallotOutlineIcon from "@/components/icons/BallotOutline.vue";
 import CardAccountDetailsIcon from "@/components/icons/CardAccountDetails.vue";
+import AccountIcon from "@/components/icons/Account.vue";
+import CellphoneIcon from "@/components/icons/Cellphone.vue";
 
 export default {
   components: {
@@ -95,6 +121,8 @@ export default {
     VoteIcon,
     BallotOutlineIcon,
     CardAccountDetailsIcon,
+    AccountIcon,
+    CellphoneIcon,
   },
   props: {
     data: Object,

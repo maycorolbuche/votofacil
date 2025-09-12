@@ -8,6 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Account: typeof import('./src/components/icons/Account.vue')['default']
+    AccountMultiplePlus: typeof import('./src/components/icons/AccountMultiplePlus.vue')['default']
     BAccordion: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordion']
     BAccordionItem: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordionItem']
     BAlert: typeof import('bootstrap-vue-next/components/BAlert')['BAlert']
@@ -39,7 +41,7 @@ declare module 'vue' {
     CheckBold: typeof import('./src/components/icons/CheckBold.vue')['default']
     Close: typeof import('./src/components/icons/Close.vue')['default']
     CloseThick: typeof import('./src/components/icons/CloseThick.vue')['default']
-    copy: typeof import('./src/components/icons/ThumbUp copy.vue')['default']
+    copy: typeof import('./src/components/icons/PlusThick copy.vue')['default']
     DotsVertical: typeof import('./src/components/icons/DotsVertical.vue')['default']
     ErrorMessage: typeof import('./src/components/ErrorMessage.vue')['default']
     Footer: typeof import('./src/components/admin/Footer.vue')['default']

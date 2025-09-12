@@ -1,5 +1,6 @@
 <template>
   <BTab class="content-container">
+    {{ user_add_data }}
     <template #title>
       <BSpinner
         v-if="data?.resume?.total_pending_users > 0"
@@ -69,6 +70,18 @@
                   !user_disapproving.includes(row.item.id)
                 "
               >
+                <!-- ADICIONAR SUB-USUARIO -->
+                <BLink
+                  v-if="row.item.status === 'approved' && row.item.is_primary"
+                  @click="
+                    user_add_data = Object.assign({}, { parent: row.item });
+                    user_add_modal = !user_add_modal;
+                  "
+                  class="mx-1"
+                >
+                  <AccountMultiplePlusIcon color="var(--bs-info)" />
+                </BLink>
+
                 <!-- EDITAR -->
                 <BLink
                   v-if="row.item.status !== 'pending'"
@@ -165,9 +178,38 @@
       </BAccordionItem>
     </BAccordion>
 
+    <!-- MODAL CRIAR USUARIO -->
+    <BModal
+      v-model="user_add_modal"
+      @ok="add_user"
+      cancel-title="Cancelar"
+      ok-title="Confirmar"
+    >
+      <template #title>
+        Adicionar usuário
+        <BBadge variant="warning">
+          <div class="d-flex align-items-center">
+            <CellphoneIcon :size="16" />
+            <div>{{ user_add_data?.parent?.name }}</div>
+          </div>
+        </BBadge>
+      </template>
+      <small>
+        Você irá adicionar um usuário no mesmo dispositivo de
+        <strong>{{ user_add_data?.parent?.name }}</strong
+        >. Ao adicionar o usuário neste dispositivo, ambos os usuários irão
+        compartilhar o mesmo dispositivo para a votação (quando o primeiro
+        terminar de votar, irá passar o dispositivo para o próximo usuário).
+      </small>
+      <BFormGroup label="Nome:">
+        <BFormInput placeholder="Digite o nome" v-model="user_add_data.name" />
+      </BFormGroup>
+    </BModal>
+
+    <!-- MODAL EDITAR USUARIO -->
     <BModal
       v-model="user_update_modal"
-      title="Alterar candidato"
+      title="Alterar usuário"
       @ok="update_user"
       cancel-title="Cancelar"
       ok-title="Confirmar"
@@ -186,6 +228,7 @@
 import Api from "@/services/Api.js";
 import Swal from "sweetalert2";
 
+import AccountMultiplePlusIcon from "@/components/icons/AccountMultiplePlus.vue";
 import DotsVerticalIcon from "@/components/icons/DotsVertical.vue";
 import CellphoneIcon from "@/components/icons/Cellphone.vue";
 import CheckBoldIcon from "@/components/icons/CheckBold.vue";
@@ -197,6 +240,7 @@ import TrashCanOutlineIcon from "@/components/icons/TrashCanOutline.vue";
 
 export default {
   components: {
+    AccountMultiplePlusIcon,
     DotsVerticalIcon,
     CellphoneIcon,
     CheckBoldIcon,
@@ -217,6 +261,9 @@ export default {
     user_name_new_loading: false,
     user_name_new_error: null,
     */
+    user_add_data: [],
+    user_add_modal: false,
+
     user_update_data: [],
     user_update_modal: false,
     user_updating: [],
@@ -422,8 +469,9 @@ user_deleting_all_loading: false,
       );
        */
     },
-    /* async add_user() {
-      this.user_name_new_error = null;
+    async add_user() {
+      console.log("ASDS");
+      /*  this.user_name_new_error = null;
 
       if (!this.user_name_new) {
         this.user_name_new_error = "Informe o nome do(a) candidato(a)!";
@@ -448,8 +496,8 @@ user_deleting_all_loading: false,
           self.user_loading = true;
           self.$emit("save");
         }
-      );
-    },*/
+      );*/
+    },
     async update_user() {
       if (!this.user_update_data.name) {
         Swal.fire({ title: "Nome não informado!", icon: "error" });
