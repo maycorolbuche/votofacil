@@ -1,6 +1,5 @@
 <template>
   <BTab class="content-container">
-    {{ user_add_data }}
     <template #title>
       <BSpinner
         v-if="data?.resume?.total_pending_users > 0"
@@ -46,6 +45,31 @@
           >
             <template #cell(name)="row">
               {{ row.item.name }}
+
+              <BPopover :delay="1000">
+                <template #target>
+                  <BBadge
+                    v-if="
+                      row.item.is_primary && row.item?.device?.users_count > 1
+                    "
+                    variant="info"
+                  >
+                    <div class="d-flex align-items-center">
+                      <CellphoneSoundIcon :size="16" />
+                      <div>+{{ row.item?.device?.users_count - 1 }}</div>
+                    </div>
+                  </BBadge>
+                </template>
+                <span v-if="row.item?.device?.users_count - 1 === 1">
+                  <strong>{{ row.item?.device?.users_count - 1 }}</strong>
+                  usuário vinculado a este aparelho
+                </span>
+                <span v-else-if="row.item?.device?.users_count - 1 > 1">
+                  <strong>{{ row.item?.device?.users_count - 1 }}</strong>
+                  usuários vinculados a este aparelho
+                </span>
+              </BPopover>
+
               <BPopover :delay="1000">
                 <template #target>
                   <BBadge v-if="!row.item.is_primary" variant="warning">
@@ -112,12 +136,10 @@
                 <!-- APAGAR USUARIO -->
                 <BLink
                   v-if="!row.item.is_primary"
-                  c-lick="
-                        change_status_user_dialog(row.item.id, 'diapproved')
-                      "
+                  @click="delete_user(row.item.id)"
                   class="mx-1"
                 >
-                  <TrashCanOutlineIcon color="var(--bs-danger)" />
+                  <AccountRemoveIcon color="var(--bs-danger)" />
                 </BLink>
 
                 <!-- AUTORIZAR ACESSO -->
@@ -135,6 +157,17 @@
                   class="mx-1"
                 >
                   <ThumbUpIcon color="var(--bs-success)" />
+                </BLink>
+
+                <!-- APAGAR DISPOSITIVO -->
+                <BLink
+                  v-if="
+                    row.item.status === 'disapproved' && row.item.is_primary
+                  "
+                  @click="delete_user(row.item.id)"
+                  class="mx-1"
+                >
+                  <TrashCanOutlineIcon color="var(--bs-danger)" />
                 </BLink>
 
                 <!-- BOTÕES APROVAR / DFESAPROVAR DISPOSITIVO PENDENTE -->
@@ -237,6 +270,8 @@ import ThumbUpIcon from "@/components/icons/ThumbUp.vue";
 import ThumbDownIcon from "@/components/icons/ThumbDown.vue";
 import RenameOutlineIcon from "@/components/icons/RenameOutline.vue";
 import TrashCanOutlineIcon from "@/components/icons/TrashCanOutline.vue";
+import CellphoneSoundIcon from "@/components/icons/CellphoneSound.vue";
+import AccountRemoveIcon from "@/components/icons/AccountRemove.vue";
 
 export default {
   components: {
@@ -249,6 +284,8 @@ export default {
     ThumbDownIcon,
     RenameOutlineIcon,
     TrashCanOutlineIcon,
+    CellphoneSoundIcon,
+    AccountRemoveIcon,
   },
   props: {
     data: Object,
@@ -259,7 +296,6 @@ export default {
 
     user_name_new: null,
     user_name_new_loading: false,
-    user_name_new_error: null,
     */
     user_add_data: [],
     user_add_modal: false,
@@ -319,6 +355,7 @@ user_deleting_all_loading: false,
           device: {
             ...deviceWithoutUsers,
             primary_user: primaryUser || null,
+            users_count: (device.users || []).length,
           },
         }));
       });
@@ -368,9 +405,6 @@ user_deleting_all_loading: false,
           this.user_updating = [];
           this.user_approving = [];
           this.user_disapproving = [];
-          if (!this.user_import_loading) {
-            this.user_loading = false;
-          }
         }
       },
       deep: true,
@@ -470,33 +504,36 @@ user_deleting_all_loading: false,
        */
     },
     async add_user() {
-      console.log("ASDS");
-      /*  this.user_name_new_error = null;
-
-      if (!this.user_name_new) {
-        this.user_name_new_error = "Informe o nome do(a) candidato(a)!";
+      if (!this.user_add_data?.name) {
+        Swal.fire({ title: "Nome não informado!", icon: "error" });
         return;
       }
 
-      this.user_name_new_loading = true;
-      this.user_loading = true;
+      let id = this.user_add_data?.parent?.id;
+      this.user_updating.push(id);
+
+      this.processing++;
       let self = this;
       await Api.post(
         "/admin/user",
-        { name: this.user_name_new },
+        {
+          name: this.user_add_data?.name,
+          device_id: this.user_add_data?.parent?.device_id,
+        },
         function (status, data) {
-          self.user_name_new_loading = false;
-
+          self.processing--;
           if (!status) {
-            self.user_name_new_error = data;
+            Swal.fire({ title: data, icon: "error" });
+            const index = self.user_updating.indexOf(id);
+            if (index !== -1) {
+              self.user_updating.splice(index, 1);
+            }
             return;
           }
 
-          self.user_name_new = null;
-          self.user_loading = true;
           self.$emit("save");
         }
-      );*/
+      );
     },
     async update_user() {
       if (!this.user_update_data.name) {
@@ -526,10 +563,10 @@ user_deleting_all_loading: false,
           self.$emit("save");
         }
       );
-    } /*
+    },
     async delete_user(id) {
       Swal.fire({
-        title: "Deseja realmente apagar este(a) candidato(a)?",
+        title: "Deseja realmente apagar este(a) usuário(a)?",
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Sim",
@@ -553,7 +590,7 @@ user_deleting_all_loading: false,
           });
         }
       });
-    },
+    } /*
     async delete_all_user() {
       Swal.fire({
         title: "Deseja realmente apagar todos os candidatos?",

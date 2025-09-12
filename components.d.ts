@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Account: typeof import('./src/components/icons/Account.vue')['default']
     AccountMultiplePlus: typeof import('./src/components/icons/AccountMultiplePlus.vue')['default']
+    AccountRemove: typeof import('./src/components/icons/AccountRemove.vue')['default']
     BAccordion: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordion']
     BAccordionItem: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordionItem']
     BAlert: typeof import('bootstrap-vue-next/components/BAlert')['BAlert']
@@ -38,6 +39,7 @@ declare module 'vue' {
     CardAccountDetails: typeof import('./src/components/icons/CardAccountDetails.vue')['default']
     Ce: typeof import('./src/components/icons/Ce.vue')['default']
     Cellphone: typeof import('./src/components/icons/Cellphone.vue')['default']
+    CellphoneSound: typeof import('./src/components/icons/CellphoneSound.vue')['default']
     CheckBold: typeof import('./src/components/icons/CheckBold.vue')['default']
     Close: typeof import('./src/components/icons/Close.vue')['default']
     CloseThick: typeof import('./src/components/icons/CloseThick.vue')['default']
