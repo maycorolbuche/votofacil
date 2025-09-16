@@ -2,7 +2,7 @@
   <div v-if="data || error">
     <ErrorMessage v-if="error" :message="error" />
     <UserName v-else-if="data.status == 'no-users'" @save="load_data()" />
-    <Waiting v-else-if="data.status == 'pending'" />
+    <Waiting v-else-if="data.status == 'pending'" :data="data" />
 
     <div
       v-else

@@ -44,6 +44,16 @@
             ]"
           >
             <template #cell(name)="row">
+              <BAvatar
+                badge-pill
+                :size="10"
+                text=" "
+                :variant="
+                  user_status(data?.users_last_sync[row.item.device_id] ?? '')
+                    .variant
+                "
+              />
+
               {{ row.item.name }}
 
               <BPopover :delay="1000">
@@ -259,6 +269,7 @@
 
 <script>
 import Api from "@/services/Api.js";
+import UserStatus from "@/helpers/UserStatus.js";
 import Swal from "sweetalert2";
 
 import AccountMultiplePlusIcon from "@/components/icons/AccountMultiplePlus.vue";
@@ -663,6 +674,9 @@ user_deleting_all_loading: false,
       }
       return ret;
     },*/,
+    user_status(datetime) {
+      return UserStatus.status(datetime);
+    },
   },
 };
 </script>
