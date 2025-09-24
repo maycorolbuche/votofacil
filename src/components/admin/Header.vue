@@ -19,6 +19,24 @@
         </BCardTitle>
       </div>
       <div class="mx-2">
+        <BButton
+          :disabled="change_status_loading"
+          size="sm"
+          class="w-100"
+          :variant="data?.room?.status == 'closed' ? 'warning' : 'danger'"
+          @click="change_status()"
+        >
+          <BSpinner v-if="change_status_loading" small class="mx-1" />
+          <span v-else>
+            {{
+              data?.room?.status == "closed"
+                ? "Abrir Votação"
+                : "Fechar Votação"
+            }}
+          </span>
+        </BButton>
+      </div>
+      <div class="mx-2">
         <BDropdown
           size="lg"
           variant="link"
@@ -72,6 +90,7 @@ export default {
       name: null,
       loading: false,
     },
+    change_status_loading: false,
   }),
   methods: {
     edit_room_name() {
@@ -96,6 +115,25 @@ export default {
           self.$emit("save");
         }
       );
+    },
+    async change_status() {
+      this.change_status_loading = true;
+      let status = this.data?.room?.status == "open" ? "closed" : "open";
+      let self = this;
+      await Api.patch("/admin/room", { status }, function (status, data) {
+        if (status) {
+          self.data.room.status = self.status;
+        }
+        self.change_status_loading = false;
+
+        if (!status) {
+          Swal.fire({
+            title: data,
+            icon: "error",
+          });
+        }
+        self.$emit("save");
+      });
     },
   },
 };
