@@ -116,7 +116,7 @@ export default {
       window &&
       window.location &&
       (window.location.hostname === "localhost" ||
-        window.location.hostname === "192.168.1.110")
+        window.location.hostname === "192.168.1.138")
     );
   },
 

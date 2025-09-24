@@ -11,7 +11,8 @@
     >
       <router-link class="home-link" :to="{ name: 'Home' }"> HOME </router-link>
 
-      VOTER. [{{ lock }}] .{{ data }}.
+      VOTER. [{{ lock }}]
+      <pre>.{{ data }}.</pre>
       <br />
       ERRO: {{ error }}
     </div>

@@ -118,7 +118,7 @@
               size="34px"
               :text="row.item.position + 'º'"
             />
-            <BAvatar v-else size="34px" text="." />
+            <BAvatar v-else size="34px" :text="row.item.initials" />
           </div>
         </template>
 
