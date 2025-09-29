@@ -155,22 +155,6 @@ export default {
 </script>
 
 <style>
-.watermark-logo {
-  position: absolute;
-  inset: 0;
-  align-items: center;
-  pointer-events: none;
-  user-select: none;
-  z-index: 1000;
-  font-size: 4rem;
-  opacity: 0.04;
-  height: 50vh;
-  width: 50vh;
-  object-fit: contain;
-  justify-self: center;
-  align-self: center;
-}
-
 .content-container > .card .tabs,
 .content-container > .card .tabs .tab-content,
 .content-container > .card .tabs .tab-content .tab-pane.active {
