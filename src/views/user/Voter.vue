@@ -28,6 +28,12 @@
             <span v-if="data.status == 'closed'" class="text-truncate">
               Votação pausada
             </span>
+            <span
+              v-else-if="data.status == 'no-votes-left'"
+              class="text-truncate"
+            >
+              Votação concluída
+            </span>
             <span v-else class="text-truncate">
               {{ data?.user?.name }}, faça sua escolha:
             </span>
@@ -56,6 +62,15 @@
           class="p-3 d-flex flex-column align-items-center justify-content-center h-100"
         >
           <span style="font-weight: 600"> Aguarde o início da votação! </span>
+          <BSpinner style="width: 3rem; height: 3rem" class="m-3" />
+        </BCardText>
+        <BCardText
+          v-if="data.status == 'no-votes-left'"
+          class="p-3 d-flex flex-column align-items-center justify-content-center h-100"
+        >
+          <span style="font-weight: 600">
+            Você já finalizou sua votação! Aguarde a apuração dos votos...
+          </span>
           <BSpinner style="width: 3rem; height: 3rem" class="m-3" />
         </BCardText>
         <BCardText v-else class="overflow-auto p-3 candidates-list">
