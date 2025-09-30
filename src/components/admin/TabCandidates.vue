@@ -213,6 +213,16 @@
             Importar Nomes
           </BButton>
           <BButton
+            :disabled="votes_deleting_all_loading"
+            class="w-100 my-2"
+            variant="warning"
+            @click="delete_all_votes()"
+          >
+            <BallotOutlineIcon v-if="!votes_deleting_all_loading" :size="20" />
+            <BSpinner v-else small class="mx-1" />
+            Limpar Votos
+          </BButton>
+          <BButton
             :disabled="candidate_deleting_all_loading"
             class="w-100 my-2"
             variant="danger"
@@ -258,6 +268,7 @@ import PlusThickIcon from "@/components/icons/PlusThick.vue";
 import RenameOutlineIcon from "@/components/icons/RenameOutline.vue";
 import TrashCanOutlineIcon from "@/components/icons/TrashCanOutline.vue";
 import TextBoxCheckOutlineIcon from "@/components/icons/TextBoxCheckOutline.vue";
+import BallotOutlineIcon from "@/components/icons/BallotOutline.vue";
 
 export default {
   components: {
@@ -265,6 +276,7 @@ export default {
     RenameOutlineIcon,
     TrashCanOutlineIcon,
     TextBoxCheckOutlineIcon,
+    BallotOutlineIcon,
   },
   props: {
     data: Object,
@@ -285,6 +297,8 @@ export default {
     candidate_deleting: [],
 
     candidate_import_loading: false,
+
+    votes_deleting_all_loading: false,
   }),
   computed: {
     candidates() {
@@ -445,6 +459,33 @@ export default {
             }
 
             self.data.room.candidates = [];
+            self.$emit("save");
+          });
+        }
+      });
+    },
+    async delete_all_votes() {
+      Swal.fire({
+        title: "Deseja realmente limpar todos os votos?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.votes_deleting_all_loading = true;
+
+          this.processing++;
+          let self = this;
+          Api.delete("/admin/vote", null, function (status, data) {
+            self.processing--;
+            self.votes_deleting_all_loading = false;
+
+            if (!status) {
+              Swal.fire({ title: data, icon: "error" });
+              return;
+            }
+
             self.$emit("save");
           });
         }

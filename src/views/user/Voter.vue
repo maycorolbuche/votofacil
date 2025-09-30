@@ -74,7 +74,6 @@
           <BSpinner style="width: 3rem; height: 3rem" class="m-3" />
         </BCardText>
         <BCardText v-else class="overflow-auto p-3 candidates-list">
-          <pre>{{ data }}</pre>
           <TransitionGroup name="list" tag="ul">
             <li v-for="candidate in data?.candidates" :key="candidate.id">
               <BButton
