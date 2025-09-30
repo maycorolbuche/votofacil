@@ -14,6 +14,25 @@
       </div>
     </div>
 
+    <div v-if="user_modal">
+      <div
+        class="position-absolute z-1 w-100 h-100 bg-white d-flex align-items-center justify-content-center"
+      >
+        <BCard no-body class="card d-flex align-items-center flex-col p-3">
+          <span class="ms-2" style="font-weight: 600">
+            Agora, entregue o dispositivo para
+          </span>
+          <span class="ms-2 fs-1" style="font-weight: 600">
+            {{ user_name }}
+          </span>
+          <BSpinner class="m-4" />
+          <BButton variant="info" @click="user_modal = false">
+            Continuar
+          </BButton>
+        </BCard>
+      </div>
+    </div>
+
     <ErrorMessage v-if="error" :message="error" />
     <UserName v-else-if="data.status == 'no-users'" @save="load_data()" />
     <Waiting v-else-if="data.status == 'pending'" :data="data" />
@@ -35,7 +54,7 @@
               Votação concluída
             </span>
             <span v-else class="text-truncate">
-              {{ data?.user?.name }}, faça sua escolha:
+              {{ user_name }}, faça sua escolha:
             </span>
           </div>
           <div>
@@ -128,9 +147,34 @@ export default {
     count_error: 0,
     vote_select: null,
     vote_processing: null,
+    processing: 0,
+    user_modal: false,
 
     abort_controller: null,
   }),
+  computed: {
+    user_name() {
+      return this.data?.user?.name;
+    },
+  },
+  watch: {
+    data: {
+      handler(newVal) {
+        if (this.processing == 0) {
+          this.vote_processing = null;
+          this.vote_select = null;
+        }
+      },
+      deep: true,
+    },
+    user_name(newVal, oldVal) {
+      newVal = newVal ?? "";
+      oldVal = oldVal ?? "";
+
+      if (newVal !== oldVal && newVal !== "" && oldVal !== "")
+        this.user_modal = true;
+    },
+  },
   methods: {
     async load_data() {
       if (this.lock) {
@@ -188,6 +232,7 @@ export default {
         if (result.isConfirmed) {
           this.vote_processing = candidate;
 
+          this.processing++;
           let self = this;
           Api.post(
             "/user/vote",
@@ -196,15 +241,15 @@ export default {
               candidate_id: candidate.id,
             },
             function (status, data) {
-              self.vote_processing = null;
-              self.vote_select = null;
-
               if (!status) {
                 Swal.fire({ title: data, icon: "error" });
                 return;
               } else {
                 self.data.votes.push(candidate.id);
               }
+              setTimeout(() => {
+                self.processing--;
+              }, 10);
             }
           );
         } else {
