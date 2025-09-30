@@ -303,23 +303,15 @@ export default {
   },
   data: () => ({
     processing: 0,
-    /*user_loading: false,
 
-    user_name_new: null,
-    user_name_new_loading: false,
-    */
     user_add_data: [],
     user_add_modal: false,
 
     user_update_data: [],
     user_update_modal: false,
     user_updating: [],
-    /*
-user_deleting_all_loading: false,
-    */
+
     user_deleting: [],
-    /*
-    user_import_loading: false,*/
 
     user_approving: [],
     user_disapproving: [],
@@ -601,79 +593,7 @@ user_deleting_all_loading: false,
           });
         }
       });
-    } /*
-    async delete_all_user() {
-      Swal.fire({
-        title: "Deseja realmente apagar todos os candidatos?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sim",
-        cancelButtonText: "Não",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.user_deleting_all_loading = true;
-
-          let self = this;
-          Api.delete("/admin/user", null, function (status, data) {
-            self.user_deleting_all_loading = false;
-
-            if (!status) {
-              Swal.fire({ title: data, icon: "error" });
-              return;
-            }
-
-            self.data.room.users = [];
-            self.$emit("save");
-          });
-        }
-      });
     },
-    async import_user() {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = ".txt";
-      input.onchange = async (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        this.user_import_loading = true;
-        this.user_loading = true;
-        try {
-          const text = await file.text();
-          const names = text
-            .split(/\r?\n/)
-            .map((line) => line.trim())
-            .filter(Boolean);
-
-          this.user_loading = true;
-          let self = this;
-          await Api.post(
-            "/admin/user",
-            { name: names },
-            function (status, data) {
-              self.user_loading = true;
-              self.user_import_loading = false;
-              self.$emit("save");
-            }
-          );
-        } catch (e) {
-          Swal.fire({
-            title: "Erro ao importar arquivo",
-            text: e.message,
-            icon: "error",
-          });
-          this.user_loading = false;
-          this.user_import_loading = false;
-        }
-      };
-      input.click();
-    },
-    position_color(num) {
-      let ret = Position.color(num);
-      if (!ret || !Array.isArray(ret) || ret.length < 2) {
-        ret = ["#000", "#FFF"];
-      }
-      return ret;
-    },*/,
     user_status(datetime) {
       return UserStatus.status(datetime);
     },

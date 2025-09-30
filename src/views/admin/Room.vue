@@ -115,25 +115,33 @@ export default {
 
       this.lock = true;
       let self = this;
-      await Api.get("/admin/sync", null, function (status, data) {
-        self.lock = false;
+      await Api.get(
+        "/admin/sync",
+        {
+          __signal: signal,
+        },
+        function (status, data) {
+          self.lock = false;
 
-        if (!status) {
-          self.error = data;
-          self.count_error++;
+          if (!status) {
+            if (!(typeof data === "string" && data.includes("signal"))) {
+              self.error = data;
+              self.count_error++;
 
-          if (self.count_error >= 10) {
-            self.$router.push({ name: "Home" });
+              if (self.count_error >= 10) {
+                self.$router.push({ name: "Home" });
+              }
+            }
+            return;
           }
-          return;
+
+          Storage.set("admin-token-ts", Date.now());
+
+          self.count_error = 0;
+          self.error = null;
+          self.data = data;
         }
-
-        Storage.set("admin-token-ts", Date.now());
-
-        self.count_error = 0;
-        self.error = null;
-        self.data = data;
-      });
+      );
     },
     abort() {
       if (this.abort_controller) {

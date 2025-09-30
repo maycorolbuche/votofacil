@@ -1,5 +1,19 @@
 <template>
   <div v-if="data || error">
+    <div v-if="vote_processing">
+      <div class="position-absolute z-1 w-100 h-100 bg-white opacity-50" />
+      <div
+        class="position-absolute z-2 w-100 h-100 d-flex align-items-center justify-content-center"
+      >
+        <BCard no-body class="card d-flex align-items-center flex-row p-3">
+          <BSpinner class="m-2" />
+          <span class="ms-2" style="font-weight: 600">
+            Processando seu voto, aguarde...
+          </span>
+        </BCard>
+      </div>
+    </div>
+
     <ErrorMessage v-if="error" :message="error" />
     <UserName v-else-if="data.status == 'no-users'" @save="load_data()" />
     <Waiting v-else-if="data.status == 'pending'" :data="data" />
@@ -13,6 +27,9 @@
           <div class="flex-auto">
             <span v-if="data.status == 'closed'" class="text-truncate">
               Votação pausada
+            </span>
+            <span v-else class="text-truncate">
+              {{ data?.user?.name }}, faça sua escolha:
             </span>
           </div>
           <div>
@@ -42,9 +59,20 @@
           <BSpinner style="width: 3rem; height: 3rem" class="m-3" />
         </BCardText>
         <BCardText v-else class="overflow-auto p-3 candidates-list">
+          <pre>{{ data }}</pre>
           <TransitionGroup name="list" tag="ul">
             <li v-for="candidate in data?.candidates" :key="candidate.id">
-              <BButton variant="warning">
+              <BButton
+                :variant="
+                  vote_processing?.id == candidate?.id ||
+                  vote_select?.id == candidate?.id
+                    ? 'warning'
+                    : data.votes.includes(candidate?.id)
+                    ? 'light'
+                    : 'info'
+                "
+                @click="vote(data?.user, candidate)"
+              >
                 <span class="text-truncate">{{ candidate.name }}</span>
               </BButton>
             </li>
@@ -64,6 +92,7 @@
 <script>
 import Api from "@/services/Api.js";
 import Storage from "@/helpers/Storage.js";
+import Swal from "sweetalert2";
 
 import ErrorMessage from "@/components/ErrorMessage.vue";
 import UserName from "@/components/user/UserName.vue";
@@ -83,6 +112,10 @@ export default {
     timer: null,
     lock: false,
     count_error: 0,
+    vote_select: null,
+    vote_processing: null,
+
+    abort_controller: null,
   }),
   methods: {
     async load_data() {
@@ -90,27 +123,86 @@ export default {
         return;
       }
 
+      this.abort_controller = new AbortController();
+      const signal = this.abort_controller.signal;
+
       this.lock = true;
       let self = this;
-      await Api.get("/user/sync", null, function (status, data) {
-        self.lock = false;
+      await Api.get(
+        "/user/sync",
+        {
+          __signal: signal,
+        },
+        function (status, data) {
+          self.lock = false;
 
-        if (!status) {
-          self.error = data;
-          self.count_error++;
+          if (!status) {
+            if (!(typeof data === "string" && data.includes("signal"))) {
+              self.error = data;
+              self.count_error++;
 
-          if (self.count_error >= 10) {
-            self.$router.push({ name: "Home" });
+              if (self.count_error >= 10) {
+                self.$router.push({ name: "Home" });
+              }
+            }
+            return;
           }
-          return;
+
+          Storage.set("user-token-ts", Date.now());
+
+          self.count_error = 0;
+          self.error = null;
+          self.data = data;
         }
+      );
+    },
 
-        Storage.set("user-token-ts", Date.now());
+    async vote(user, candidate) {
+      if (this.data.votes.includes(candidate?.id)) {
+        return;
+      }
 
-        self.count_error = 0;
-        self.error = null;
-        self.data = data;
+      this.vote_select = candidate;
+
+      Swal.fire({
+        title: 'Confirma voto em "' + candidate.name + '"?',
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.vote_processing = candidate;
+
+          let self = this;
+          Api.post(
+            "/user/vote",
+            {
+              user_id: user.id,
+              candidate_id: candidate.id,
+            },
+            function (status, data) {
+              self.vote_processing = null;
+              self.vote_select = null;
+
+              if (!status) {
+                Swal.fire({ title: data, icon: "error" });
+                return;
+              } else {
+                self.data.votes.push(candidate.id);
+              }
+            }
+          );
+        } else {
+          this.vote_select = null;
+        }
       });
+    },
+
+    abort() {
+      if (this.abort_controller) {
+        this.abort_controller.abort();
+      }
     },
   },
   mounted() {
