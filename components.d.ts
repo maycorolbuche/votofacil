@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Account: typeof import('./src/components/icons/Account.vue')['default']
+    AccountCircle: typeof import('./src/components/icons/AccountCircle.vue')['default']
     AccountMultiplePlus: typeof import('./src/components/icons/AccountMultiplePlus.vue')['default']
     AccountRemove: typeof import('./src/components/icons/AccountRemove.vue')['default']
     BAccordion: typeof import('bootstrap-vue-next/components/BAccordion')['BAccordion']

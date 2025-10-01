@@ -102,7 +102,7 @@ export default {
 
   base_url() {
     if (this.is_local()) {
-      return "http://localhost:4002";
+      return "http://192.168.1.138:4002";
     }
     return "https://votofacil-api.maycorolbuche.com.br/";
   },

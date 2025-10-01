@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data || error">
+  <div v-if="data || error" class="h-100">
     <div v-if="vote_processing">
       <div class="position-absolute z-1 w-100 h-100 bg-white opacity-50" />
       <div
@@ -14,16 +14,19 @@
       </div>
     </div>
 
-    <div v-if="user_modal">
+    <div v-if="user_modal && data.status == 'open'">
       <div
         class="position-absolute z-1 w-100 h-100 bg-white d-flex align-items-center justify-content-center"
       >
         <BCard no-body class="card d-flex align-items-center flex-col p-3">
-          <span class="ms-2" style="font-weight: 600">
+          <span v-if="!primary_user" class="ms-2" style="font-weight: 600">
             Agora, entregue o dispositivo para
           </span>
           <span class="ms-2 fs-1" style="font-weight: 600">
             {{ user_name }}
+          </span>
+          <span v-if="primary_user" class="ms-2" style="font-weight: 600">
+            Você começa a votação!
           </span>
           <BSpinner class="m-4" />
           <BButton variant="info" @click="user_modal = false">
@@ -44,6 +47,10 @@
           class="p-2 px-3 d-flex align-items-center flex-nowrap flex-row"
         >
           <div class="flex-auto">
+            <span class="text-truncate">
+              {{ data?.room_name || "Sala de votação" }}
+            </span>
+            <!--
             <span v-if="data.status == 'closed'" class="text-truncate">
               Votação pausada
             </span>
@@ -56,7 +63,12 @@
             <span v-else class="text-truncate">
               {{ user_name }}, faça sua escolha:
             </span>
+            -->
           </div>
+          <BBadge v-if="data?.status == 'open'" class="mx-2">
+            <AccountCircleIcon color="#FFF" />
+            {{ user_name }}
+          </BBadge>
           <div>
             <BDropdown
               size="lg"
@@ -80,14 +92,37 @@
           v-if="data.status == 'closed'"
           class="p-3 d-flex flex-column align-items-center justify-content-center h-100"
         >
+          <BAlert
+            :model-value="true"
+            variant="warning"
+            class="w-100 d-flex align-items-center justify-content-center"
+          >
+            Votação Pausada
+          </BAlert>
           <span style="font-weight: 600"> Aguarde o início da votação! </span>
           <BSpinner style="width: 3rem; height: 3rem" class="m-3" />
+          <div class="text-center mt-2">
+            <div v-if="data?.users?.length > 1" style="font-weight: 600">
+              Dispositivo Compartilhado
+            </div>
+            <div>
+              <BBadge
+                v-for="user in data?.users"
+                :key="user.id"
+                :variant="user.is_primary ? 'info' : 'warning'"
+                class="m-1"
+              >
+                <AccountCircleIcon />
+                {{ user.name }}
+              </BBadge>
+            </div>
+          </div>
         </BCardText>
         <BCardText
           v-if="data.status == 'no-votes-left'"
           class="p-3 d-flex flex-column align-items-center justify-content-center h-100"
         >
-          <span style="font-weight: 600">
+          <span class="text-center" style="font-weight: 600">
             Você já finalizou sua votação! Aguarde a apuração dos votos...
           </span>
           <BSpinner style="width: 3rem; height: 3rem" class="m-3" />
@@ -130,6 +165,7 @@ import Swal from "sweetalert2";
 import ErrorMessage from "@/components/ErrorMessage.vue";
 import UserName from "@/components/user/UserName.vue";
 import Waiting from "@/components/user/Waiting.vue";
+import AccountCircleIcon from "@/components/icons/AccountCircle.vue";
 import MenuIcon from "@/components/icons/Menu.vue";
 
 export default {
@@ -137,6 +173,7 @@ export default {
     ErrorMessage,
     UserName,
     Waiting,
+    AccountCircleIcon,
     MenuIcon,
   },
   data: () => ({
@@ -156,6 +193,9 @@ export default {
     user_name() {
       return this.data?.user?.name;
     },
+    primary_user() {
+      return this.data?.user?.is_primary;
+    },
   },
   watch: {
     data: {
@@ -171,8 +211,9 @@ export default {
       newVal = newVal ?? "";
       oldVal = oldVal ?? "";
 
-      if (newVal !== oldVal && newVal !== "" && oldVal !== "")
+      if (newVal !== oldVal && newVal !== "" && this.data?.users?.length > 1) {
         this.user_modal = true;
+      }
     },
   },
   methods: {
@@ -279,7 +320,7 @@ export default {
 
 <style lang="scss">
 .user-card.card {
-  height: calc(-33px + 100vh);
+  height: 100%;
 
   .card-body {
     display: contents;
