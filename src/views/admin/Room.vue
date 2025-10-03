@@ -139,7 +139,11 @@ export default {
 
           self.count_error = 0;
           self.error = null;
-          self.data = data;
+
+          if (data.datetime !== self.data?.datetime) {
+            console.log("DATA UPDATED");
+            self.data = data;
+          }
         }
       );
     },
