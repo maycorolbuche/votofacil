@@ -37,6 +37,11 @@
                 sortable: true,
               },
               {
+                key: 'vote_status',
+                label: '',
+                class: 'p-0 pe-1 align-center',
+              },
+              {
                 key: 'options',
                 label: '',
                 class: 'p-0 pe-1 align-middle',
@@ -92,6 +97,41 @@
                 Usuário vinculado ao aparelho de
                 <strong>{{ row.item.device.primary_user.name }}</strong>
               </BPopover>
+            </template>
+
+            <template #cell(vote_status)="row">
+              <div
+                v-if="data?.room?.status == 'open'"
+                class="position-relative w-100 h-100 mt-2"
+                style="min-width: 150px"
+              >
+                <div
+                  class="w-100 h-100 position-absolute text-center text-white small"
+                >
+                  <span v-if="row.item.votes_count <= 0">
+                    aguardando votação
+                  </span>
+                  <span
+                    v-else-if="row.item.votes_count >= number_candidates_vote"
+                  >
+                    votação concluída
+                  </span>
+                  <span v-else>
+                    votando ({{ row.item.votes_count }} /
+                    {{ number_candidates_vote }})
+                  </span>
+                </div>
+                <BProgress :max="number_candidates_vote" height="25px">
+                  <BProgressBar
+                    :value="row.item.votes_count"
+                    variant="success"
+                  />
+                  <BProgressBar
+                    :value="number_candidates_vote - row.item.votes_count"
+                    variant="warning"
+                  />
+                </BProgress>
+              </div>
             </template>
 
             <template #cell(options)="row">
@@ -399,6 +439,9 @@ export default {
         disapproved:
           this.users.filter((user) => user.status === "disapproved") ?? [],
       };
+    },
+    number_candidates_vote() {
+      return this?.data?.configs?.votes?.items?.num_candidates?.value;
     },
   },
   watch: {

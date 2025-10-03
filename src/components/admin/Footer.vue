@@ -1,6 +1,27 @@
 <template>
   <div>
     <BCard
+      v-if="data?.room?.status == 'open'"
+      no-body
+      class="m-2 d-flex align-items-center flex-nowrap flex-row position-relative"
+    >
+      <div class="flex-auto">
+        <div
+          class="w-100 h-100 position-absolute text-center small d-flex align-items-center justify-content-center"
+        >
+          <span
+            class="text-white bg-success px-2 rounded"
+            style="font-weight: 600"
+          >
+            votação em andamento
+          </span>
+        </div>
+        <BProgress :max="max_votes" height="25px">
+          <BProgressBar :value="total_votes" variant="success" animated />
+        </BProgress>
+      </div>
+    </BCard>
+    <BCard
       no-body
       class="m-2 p-2 d-flex align-items-center flex-nowrap flex-row"
     >
@@ -131,6 +152,26 @@ export default {
   computed: {
     is_local() {
       return Api.is_local();
+    },
+    number_candidates_vote() {
+      return this?.data?.configs?.votes?.items?.num_candidates?.value;
+    },
+    max_votes() {
+      return (
+        this?.data?.resume?.total_approved_users * this.number_candidates_vote
+      );
+    },
+    total_votes() {
+      if (!this?.data?.room?.devices) return 0;
+
+      return this.data.room.devices.reduce((total, device) => {
+        // soma votes_count de cada user dentro do device
+        const deviceVotes = (device.users || []).reduce((sum, user) => {
+          return sum + (user.votes_count || 0);
+        }, 0);
+
+        return total + deviceVotes;
+      }, 0);
     },
   },
 };

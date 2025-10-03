@@ -33,6 +33,7 @@ declare module 'vue' {
     BModal: typeof import('bootstrap-vue-next/components/BModal')['BModal']
     BPopover: typeof import('bootstrap-vue-next/components/BPopover')['BPopover']
     BProgress: typeof import('bootstrap-vue-next/components/BProgress')['BProgress']
+    BProgressBar: typeof import('bootstrap-vue-next/components/BProgress')['BProgressBar']
     BSpinner: typeof import('bootstrap-vue-next/components/BSpinner')['BSpinner']
     BTab: typeof import('bootstrap-vue-next/components/BTabs')['BTab']
     BTable: typeof import('bootstrap-vue-next/components/BTable')['BTable']

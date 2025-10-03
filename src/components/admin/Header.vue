@@ -24,7 +24,7 @@
           size="sm"
           class="w-100"
           :variant="data?.room?.status == 'closed' ? 'warning' : 'danger'"
-          @click="change_status()"
+          @click="change_status_dialog()"
         >
           <BSpinner v-if="change_status_loading" small class="mx-1" />
           <span v-else>
@@ -115,6 +115,27 @@ export default {
           self.$emit("save");
         }
       );
+    },
+    async change_status_dialog() {
+      if (
+        this.data?.room?.status !== "open" &&
+        this.data?.resume?.total_votes > 0
+      ) {
+        Swal.fire({
+          title: "Atenção",
+          text: 'Existem votos registrados, que podem ser limpos na aba "Candidatos", botão "Limpar Votos". Deseja abrir a votação mesmo assim?',
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Sim",
+          cancelButtonText: "Não",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.change_status();
+          }
+        });
+      } else {
+        await this.change_status();
+      }
     },
     async change_status() {
       this.change_status_loading = true;
