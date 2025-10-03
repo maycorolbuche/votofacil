@@ -252,7 +252,7 @@
           v-model="candidate_update_data.name"
         />
       </BFormGroup>
-      <BFormGroup label="Qtd. Votos">
+      <BFormGroup label="Qtd. Votos (admin):">
         <BFormInput v-model="candidate_update_data.admin_votes" type="number" />
       </BFormGroup>
     </BModal>
