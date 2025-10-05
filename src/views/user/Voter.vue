@@ -82,8 +82,10 @@
               <BDropdownItem :to="{ name: 'Home' }" tag="router-link">
                 Página Inicial
               </BDropdownItem>
-              <BDropdownItem href="#">Another action</BDropdownItem>
-              <BDropdownItem href="#">Something else here...</BDropdownItem>
+              <BDropdownDivider />
+              <BDropdownItem href="#" @click="exit_room()" variant="danger">
+                Desconectar
+              </BDropdownItem>
             </BDropdown>
           </div>
         </BCardTitle>
@@ -299,6 +301,22 @@ export default {
           );
         } else {
           this.vote_select = null;
+        }
+      });
+    },
+    async exit_room() {
+      Swal.fire({
+        title: "Deseja sair desta sala?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Api.delete("/user/device", {}, function (status, data) {});
+          Storage.remove("user-token");
+          Storage.remove("user-token-ts");
+          this.$router.push({ name: "Home" });
         }
       });
     },

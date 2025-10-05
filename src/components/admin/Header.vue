@@ -46,9 +46,13 @@
           <template #button-content>
             <MenuIcon :size="24" />
           </template>
-          <BDropdownItem href="#">Action</BDropdownItem>
-          <BDropdownItem href="#">Another action</BDropdownItem>
-          <BDropdownItem href="#">Something else here...</BDropdownItem>
+          <BDropdownItem :to="{ name: 'Home' }" tag="router-link">
+            Página Inicial
+          </BDropdownItem>
+          <BDropdownDivider />
+          <BDropdownItem href="#" @click="exit_room()" variant="danger">
+            Desconectar
+          </BDropdownItem>
         </BDropdown>
       </div>
     </BCard>
@@ -71,6 +75,7 @@
 
 <script>
 import Api from "@/services/Api.js";
+import Storage from "@/helpers/Storage.js";
 import Swal from "sweetalert2";
 
 import MenuIcon from "@/components/icons/Menu.vue";
@@ -154,6 +159,22 @@ export default {
           });
         }
         self.$emit("save");
+      });
+    },
+    async exit_room() {
+      Swal.fire({
+        title: "Deseja sair e apagar esta sala?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sim",
+        cancelButtonText: "Não",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Api.delete("/admin/room", {}, function (status, data) {});
+          Storage.remove("admin-token");
+          Storage.remove("admin-token-ts");
+          this.$router.push({ name: "Home" });
+        }
       });
     },
   },
