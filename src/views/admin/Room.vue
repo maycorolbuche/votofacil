@@ -12,37 +12,7 @@
         <BTabs card>
           <TabCandidates :data="data" @save="load_data(true)" />
           <TabUsers :data="data" @save="load_data(true)" />
-          <BTab title="Projetar">
-            <BCardText>Tab contents 2</BCardText>
-            <BCardText class="overflow overflow-auto">
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-              Tab contents 2<br />
-            </BCardText>
-          </BTab>
+          <TabView :data="data" @save="load_data(true)" />
           <TabConfigs :data="data" @save="load_data(true)" />
           <BTab v-if="isDebug" title="Params">
             <BCardText class="overflow overflow-auto">
@@ -72,6 +42,7 @@ import Footer from "@/components/admin/Footer.vue";
 import ErrorMessage from "@/components/ErrorMessage.vue";
 import TabCandidates from "@/components/admin/TabCandidates.vue";
 import TabUsers from "@/components/admin/TabUsers.vue";
+import TabView from "@/components/admin/TabView.vue";
 import TabConfigs from "@/components/admin/TabConfigs.vue";
 
 export default {

@@ -208,7 +208,10 @@
             variant="info"
             @click="import_candidate()"
           >
-            <TextBoxCheckOutline v-if="!candidate_import_loading" :size="20" />
+            <TextBoxCheckOutlineIcon
+              v-if="!candidate_import_loading"
+              :size="20"
+            />
             <BSpinner v-else small class="mx-1" />
             Importar Nomes
           </BButton>
