@@ -50,6 +50,7 @@ declare module 'vue' {
     copy: typeof import('./src/components/icons/Pencil copy.vue')['default']
     DotsVertical: typeof import('./src/components/icons/DotsVertical.vue')['default']
     ErrorMessage: typeof import('./src/components/ErrorMessage.vue')['default']
+    EyeOutline: typeof import('./src/components/icons/EyeOutline.vue')['default']
     Footer: typeof import('./src/components/admin/Footer.vue')['default']
     Header: typeof import('./src/components/admin/Header.vue')['default']
     Icon: typeof import('./src/components/Icon.vue')['default']

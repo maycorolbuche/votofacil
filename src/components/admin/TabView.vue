@@ -20,7 +20,11 @@
           >
             {{ url }}
           </router-link>
-          <div>
+          <div class="d-flex align-items-center">
+            <BBadge variant="light" class="me-3 d-flex align-items-center">
+              <EyeOutlineIcon :size="20" />
+              <span class="px-1">0</span>
+            </BBadge>
             <BLink @click="copy_url()" class="mx-1">
               <ContentCopyIcon :size="20" />
             </BLink>
@@ -80,6 +84,7 @@ import LinkPlusIcon from "@/components/icons/LinkPlus.vue";
 import TrashCanOutlineIcon from "@/components/icons/TrashCanOutline.vue";
 import ContentCopyIcon from "@/components/icons/ContentCopy.vue";
 import RefreshIcon from "@/components/icons/Refresh.vue";
+import EyeOutlineIcon from "@/components/icons/EyeOutline.vue";
 
 export default {
   components: {
@@ -87,6 +92,7 @@ export default {
     TrashCanOutlineIcon,
     ContentCopyIcon,
     RefreshIcon,
+    EyeOutlineIcon,
   },
   props: {
     data: Object,
