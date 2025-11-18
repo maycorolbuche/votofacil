@@ -1,5 +1,5 @@
 <template>
-  <BTab class="py-0">
+  <BTab active class="py-0">
     <template #title>
       Candidatos
       <BBadge v-if="data?.resume?.total_candidates > 0" variant="info">
