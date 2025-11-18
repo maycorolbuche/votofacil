@@ -3,6 +3,7 @@ import Home from "@/views/Home.vue";
 import About from "@/views/About.vue";
 import Room from "@/views/admin/Room.vue";
 import Voter from "@/views/user/Voter.vue";
+import View from "@/views/view/View.vue";
 
 const routes = [
   {
@@ -28,6 +29,13 @@ const routes = [
     path: "/voter",
     name: "Voter",
     component: Voter,
+  },
+
+  //View routes
+  {
+    path: "/view/:hash",
+    name: "View",
+    component: View,
   },
 ];
 const router = createRouter({
