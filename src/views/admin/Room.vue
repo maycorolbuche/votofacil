@@ -51,6 +51,7 @@ export default {
     Footer,
     TabCandidates,
     TabUsers,
+    TabView,
     TabConfigs,
     ErrorMessage,
   },
