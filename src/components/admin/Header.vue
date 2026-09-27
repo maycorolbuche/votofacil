@@ -76,6 +76,7 @@
 <script>
 import Api from "@/services/Api.js";
 import Storage from "@/helpers/Storage.js";
+import { savePhase } from "@/helpers/Projection.js";
 import Swal from "sweetalert2";
 
 import MenuIcon from "@/components/icons/Menu.vue";
@@ -144,11 +145,12 @@ export default {
     },
     async change_status() {
       this.change_status_loading = true;
-      let status = this.data?.room?.status == "open" ? "closed" : "open";
+      let nextStatus = this.data?.room?.status == "open" ? "closed" : "open";
       let self = this;
-      await Api.patch("/admin/room", { status }, function (status, data) {
+      await Api.patch("/admin/room", { status: nextStatus }, function (status, data) {
         if (status) {
-          self.data.room.status = self.status;
+          self.data.room.status = data.status;
+          savePhase(self.data.room.id, data.status === "open" ? "voting" : "results");
         }
         self.change_status_loading = false;
 

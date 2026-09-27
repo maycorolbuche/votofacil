@@ -265,6 +265,7 @@
 <script>
 import Api from "@/services/Api.js";
 import Position from "@/helpers/Position.js";
+import { savePhase } from "@/helpers/Projection.js";
 import Swal from "sweetalert2";
 
 import PlusThickIcon from "@/components/icons/PlusThick.vue";
@@ -462,6 +463,7 @@ export default {
             }
 
             self.data.room.candidates = [];
+            savePhase(self.data.room.id, self.data.room.status === "open" ? "voting" : "preparing");
             self.$emit("save");
           });
         }
@@ -489,6 +491,7 @@ export default {
               return;
             }
 
+            savePhase(self.data.room.id, self.data.room.status === "open" ? "voting" : "preparing");
             self.$emit("save");
           });
         }
