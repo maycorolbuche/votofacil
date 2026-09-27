@@ -4,9 +4,11 @@
       <BForm class="py-3">
         <h2 style="color: #888">Tela de Projeção</h2>
         <div>
-          Link para projeção, para que os usuários acompanhem a votação em tempo
-          real.
+          Compartilhe o link e abra a projeção em qualquer navegador, TV ou
+          aparelho, sem precisar entrar na sala. Os eleitores acompanham seu progresso; a apuração aparece
+          somente após o encerramento.
         </div>
+
 
         <div
           v-if="data?.view?.hash"
@@ -21,10 +23,6 @@
             {{ url }}
           </router-link>
           <div class="d-flex align-items-center">
-            <BBadge variant="light" class="me-3 d-flex align-items-center">
-              <EyeOutlineIcon :size="20" />
-              <span class="px-1">0</span>
-            </BBadge>
             <BLink @click="copy_url()" class="mx-1">
               <ContentCopyIcon :size="20" />
             </BLink>
@@ -84,7 +82,6 @@ import LinkPlusIcon from "@/components/icons/LinkPlus.vue";
 import TrashCanOutlineIcon from "@/components/icons/TrashCanOutline.vue";
 import ContentCopyIcon from "@/components/icons/ContentCopy.vue";
 import RefreshIcon from "@/components/icons/Refresh.vue";
-import EyeOutlineIcon from "@/components/icons/EyeOutline.vue";
 
 export default {
   components: {
@@ -92,7 +89,6 @@ export default {
     TrashCanOutlineIcon,
     ContentCopyIcon,
     RefreshIcon,
-    EyeOutlineIcon,
   },
   props: {
     data: Object,
