@@ -189,6 +189,7 @@ export default {
     candidatePage: 0,
     voterPage: 0,
     columns: 4,
+    viewportHeight: 768,
     autoPages: true,
     fullscreen: false,
     fullscreenError: "",
@@ -209,7 +210,7 @@ export default {
             : "Preparação";
     },
     pageSize() {
-      return this.columns * 2;
+      return this.columns * Math.max(1, Math.floor((this.viewportHeight - 280) / 70));
     },
     candidatePages() {
       return Math.max(
@@ -217,8 +218,11 @@ export default {
         Math.ceil(this.model.candidates.length / this.pageSize),
       );
     },
+    voterPageSize() {
+      return Math.max(1, Math.floor((this.viewportHeight - 280) / 70));
+    },
     voterPages() {
-      return Math.max(1, Math.ceil(this.model.voters.length / this.pageSize));
+      return Math.max(1, Math.ceil(this.model.voters.length / this.voterPageSize));
     },
     visibleCandidates() {
       return this.model.candidates.slice(
@@ -228,8 +232,8 @@ export default {
     },
     visibleVoters() {
       return this.model.voters.slice(
-        this.voterPage * this.pageSize,
-        (this.voterPage + 1) * this.pageSize,
+        this.voterPage * this.voterPageSize,
+        (this.voterPage + 1) * this.voterPageSize,
       );
     },
     approvedCount() {
@@ -269,7 +273,8 @@ export default {
     },
     resize() {
       this.columns =
-        window.innerWidth >= 1500 ? 4 : window.innerWidth >= 900 ? 3 : 2;
+        window.innerWidth >= 1600 ? 4 : window.innerWidth >= 1200 ? 3 : window.innerWidth >= 700 ? 2 : 1;
+      this.viewportHeight = window.innerHeight;
     },
     onFullscreen() {
       this.fullscreen = Boolean(document.fullscreenElement);
@@ -740,5 +745,105 @@ h2 {
   *::after {
     transition: none !important;
   }
+}
+
+/* Projeção compacta: candidatos à esquerda, eleitores à direita. */
+.projection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(240px, 23vw, 340px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 16px;
+}
+.projection-header,
+.projection-footer,
+.projection-message { grid-column: 1 / -1; }
+.projection-header { gap: 16px; }
+.projection-brand { padding: 8px; border-radius: 12px; }
+.projection-brand img { width: 80px; height: 38px; }
+h1 { font-size: clamp(22px, 2vw, 34px); }
+.eyebrow { font-size: 12px; }
+.candidate-section,
+.voter-section {
+  min-width: 0;
+  min-height: 0;
+  padding: 16px;
+  border: 1px solid #ffffff20;
+  border-radius: 16px;
+  background: #ffffff04;
+  gap: 12px;
+  overflow: auto;
+}
+.candidate-section { grid-column: 1; grid-row: 2; }
+.voter-section { grid-column: 2; grid-row: 2; }
+h2 { font-size: 20px; }
+.section-heading { min-height: 60px; }
+.section-heading p { font-size: 12px; }
+.candidate-grid {
+  flex: none;
+  grid-auto-rows: 64px;
+  align-content: start;
+  gap: 6px;
+}
+.candidate-card {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.candidate-number {
+  flex-shrink: 0;
+  padding: 3px 6px;
+  font-size: 13px;
+}
+.candidate-card h3 {
+  flex: 1;
+  min-width: 0;
+  font-size: clamp(15px, 1.1vw, 21px);
+}
+.candidate-result {
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.candidate-result strong { font-size: 24px; }
+.candidate-result span { font-size: 10px; }
+.voter-section .section-heading {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 6px;
+}
+.voter-section h2 { font-size: 17px; }
+.voter-section small { font-size: 11px; margin-left: 6px; }
+.voter-summary { justify-content: space-between; gap: 6px; font-size: 11px; }
+.page-controls { gap: 6px; font-size: 11px; }
+.page-controls button { padding: 0 8px; }
+.voter-grid {
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: 64px;
+  align-content: start;
+  gap: 6px;
+}
+.voter-card { padding: 6px 10px; border-radius: 8px; }
+.voter-name { font-size: 14px; line-height: 20px; }
+.voter-progress { height: 4px; margin: 4px 0; }
+.voter-status { font-size: 10px; line-height: 14px; }
+@media (max-width: 699px) {
+  .projection {
+    display: flex;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    gap: 12px;
+    padding: 12px;
+  }
+  .candidate-section { grid-column: 1; grid-row: 2; }
+  .voter-section { grid-column: 1; grid-row: 3; }
+  .projection-footer { grid-row: 4; }
+  .candidate-section, .voter-section { flex: none; overflow: visible; padding: 12px; }
+  .section-heading { flex-wrap: wrap; }
 }
 </style>

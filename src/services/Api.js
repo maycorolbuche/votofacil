@@ -42,7 +42,7 @@ export default {
     route,
     options = null,
     body = null,
-    callback = function () {}
+    callback = function () {},
   ) {
     let params = "";
 
@@ -102,7 +102,7 @@ export default {
 
   base_url() {
     if (this.is_local()) {
-      return "http://192.168.1.138:4002";
+      return "http://192.168.1.165:8005/";
     }
     return "https://votofacil-api.maycorolbuche.com.br/";
   },
@@ -116,7 +116,7 @@ export default {
       window &&
       window.location &&
       (window.location.hostname === "localhost" ||
-        window.location.hostname === "192.168.1.138")
+        window.location.hostname === "192.168.1.165")
     );
   },
 
