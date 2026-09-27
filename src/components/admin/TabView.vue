@@ -4,15 +4,11 @@
       <BForm class="py-3">
         <h2 style="color: #888">Tela de Projeção</h2>
         <div>
-          Abra a projeção em outra aba deste navegador e exiba essa janela na TV
-          ou no telão. Os eleitores acompanham seu progresso; a apuração aparece
+          Compartilhe o link e abra a projeção em qualquer navegador, TV ou
+          aparelho, sem precisar entrar na sala. Os eleitores acompanham seu progresso; a apuração aparece
           somente após o encerramento.
         </div>
-        <BAlert :model-value="true" variant="info" class="mt-3">
-          A projeção usa a sessão do administrador. O link não funciona em outro
-          navegador ou aparelho sem essa sessão. Para transmitir, compartilhe
-          somente a janela de projeção.
-        </BAlert>
+
 
         <div
           v-if="data?.view?.hash"

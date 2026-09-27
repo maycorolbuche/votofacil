@@ -1,36 +1,5 @@
-// The API uses "closed" before and after voting. Track the lifecycle in this
-// administrator's browser; initial manual votes must not reveal a result.
-export const phaseKey = (roomId) => `projection-phase:${roomId}`;
-export function savePhase(roomId, phase, storage = localStorage) {
-  try {
-    if (storage.getItem(phaseKey(roomId)) !== phase)
-      storage.setItem(phaseKey(roomId), phase);
-  } catch {
-    /* Restricted storage must not interrupt polling. */
-  }
-  return phase;
-}
-export function readPhase(roomId, storage = localStorage) {
-  try {
-    return storage.getItem(phaseKey(roomId));
-  } catch {
-    return null;
-  }
-}
-export function observePhase(data, storage = localStorage, previous = null) {
-  const room = data.room;
-  const known = readPhase(room.id, storage) || previous;
-  let phase = "preparing";
-  if (room.status === "open") phase = "voting";
-  else if (room.status === "closed") {
-    // The API consolidates user_votes only on closing.
-    const counted = room.candidates.some((c) => Number(c.user_votes) > 0);
-    if (known === "voting" || known === "results" || counted) phase = "results";
-  }
-  return savePhase(room.id, phase, storage);
-}
-export function projectionData(data, phase) {
-  const showResults = data.room.status === "closed" && phase === "results";
+export function projectionData(data) {
+  const showResults = data.room.status === "closed" && data.phase === "results";
   const limit = Math.max(
     1,
     Math.floor(Number(data.configs?.votes?.items?.num_candidates?.value) || 1),
@@ -82,6 +51,10 @@ export function validSnapshot(data) {
   return Boolean(
     data?.room?.id &&
     ["open", "closed"].includes(data.room.status) &&
+    ["preparing", "voting", "results"].includes(data.phase) &&
+    (data.room.status === "open"
+      ? data.phase === "voting"
+      : data.phase !== "voting") &&
     (data.room.is_active === true || data.room.is_active === 1) &&
     Array.isArray(data.room.candidates) &&
     Array.isArray(data.room.devices),

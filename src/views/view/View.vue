@@ -176,13 +176,7 @@
 </template>
 <script>
 import Api from "@/services/Api.js";
-import Storage from "@/helpers/Storage.js";
-import {
-  observePhase,
-  projectionData,
-  validSnapshot,
-  phaseKey,
-} from "@/helpers/Projection.js";
+import { projectionData, validSnapshot } from "@/helpers/Projection.js";
 export default {
   data: () => ({
     snapshot: null,
@@ -202,7 +196,7 @@ export default {
   computed: {
     model() {
       return this.snapshot
-        ? projectionData(this.snapshot, this.phase)
+        ? projectionData(this.snapshot)
         : { candidates: [], voters: [], showResults: false };
     },
     phaseLabel() {
@@ -293,14 +287,6 @@ export default {
           "Não foi possível abrir tela cheia. Use a opção do navegador.";
       }
     },
-    onStorage(event) {
-      if (
-        event.key === null ||
-        event.key === "admin-token" ||
-        (this.snapshot && event.key === phaseKey(this.snapshot.room.id))
-      )
-        this.restart();
-    },
     onVisibility() {
       if (document.hidden) this.stop();
       else this.restart();
@@ -313,7 +299,7 @@ export default {
     },
     restart() {
       this.stop();
-      this.snapshot = null; // Never retain a result after a session/link change.
+      this.snapshot = null; // Never retain a result after a link change.
       this.phase = "preparing";
       this.message = null;
       this.candidatePage = 0;
@@ -322,49 +308,38 @@ export default {
     },
     async load() {
       const generation = this.generation;
-      const token = Storage.get("admin-token", "");
-      if (!token) {
-        this.snapshot = null;
-        this.message = {
-          title: "Abra a projeção no navegador do administrador",
-          text: "Nesta versão, use a aba Projetar no mesmo navegador em que a sala foi criada e exiba essa janela na TV ou no telão.",
-        };
-        return;
-      }
       const controller = new AbortController();
       this.controller = controller;
       const timeout = setTimeout(() => controller.abort(), 10000);
       let retry = true;
       try {
         const response = await fetch(
-          `${Api.url().replace(/\/$/, "")}/admin/sync`,
+          `${Api.url().replace(/\/$/, "")}/view/${encodeURIComponent(this.$route.params.hash)}`,
           {
             headers: {
-              Authorization: `admin=${token}`,
               Accept: "application/json",
             },
             signal: controller.signal,
             cache: "no-store",
+            credentials: "omit",
+            referrerPolicy: "no-referrer",
           },
         );
-        if (!response.ok) throw new Error("sync");
-        const data = await response.json();
-        if (
-          generation !== this.generation ||
-          token !== Storage.get("admin-token", "")
-        )
-          return;
-        if (data.error || !validSnapshot(data)) throw new Error("snapshot");
-        if (!data.view?.hash || data.view.hash !== this.$route.params.hash) {
+        if (generation !== this.generation) return;
+        if (response.status === 404 || response.status === 410) {
           this.snapshot = null;
           this.message = {
-            title: "Link de projeção inválido ou revogado",
-            text: "Abra o link atual na aba Projetar da sala que está ativa neste navegador.",
+            title: "Link de projeção indisponível",
+            text: "O link pode ter sido revogado ou a sala desativada. Peça ao organizador o link atual.",
           };
           retry = false;
           return;
         }
-        const nextPhase = observePhase(data, localStorage, this.phase);
+        if (!response.ok) throw new Error("sync");
+        const data = await response.json();
+        if (generation !== this.generation) return;
+        if (data.error || !validSnapshot(data)) throw new Error("snapshot");
+        const nextPhase = data.phase;
         if (nextPhase !== this.phase) {
           this.candidatePage = 0;
           this.voterPage = 0;
@@ -393,7 +368,6 @@ export default {
   mounted() {
     this.resize();
     window.addEventListener("resize", this.resize);
-    window.addEventListener("storage", this.onStorage);
     document.addEventListener("visibilitychange", this.onVisibility);
     document.addEventListener("fullscreenchange", this.onFullscreen);
     this.pageTimer = setInterval(() => {
@@ -407,7 +381,6 @@ export default {
     this.stop();
     clearInterval(this.pageTimer);
     window.removeEventListener("resize", this.resize);
-    window.removeEventListener("storage", this.onStorage);
     document.removeEventListener("visibilitychange", this.onVisibility);
     document.removeEventListener("fullscreenchange", this.onFullscreen);
   },

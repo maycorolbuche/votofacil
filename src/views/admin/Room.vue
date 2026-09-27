@@ -36,7 +36,6 @@
 <script>
 import Api from "@/services/Api.js";
 import Storage from "@/helpers/Storage.js";
-import { observePhase } from "@/helpers/Projection.js";
 
 import Header from "@/components/admin/Header.vue";
 import Footer from "@/components/admin/Footer.vue";
@@ -112,8 +111,6 @@ export default {
 
           self.count_error = 0;
           self.error = null;
-
-          observePhase(data);
 
           if (data.datetime !== self.data?.datetime) {
             console.log("DATA UPDATED");
